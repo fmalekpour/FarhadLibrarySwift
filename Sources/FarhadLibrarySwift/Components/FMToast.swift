@@ -15,7 +15,7 @@ public class FMToast: ObservableObject
 	
 	@Published fileprivate var display: Bool = false
 	
-	func show(_ text: String, systemImage: String? = nil)
+	public func show(_ text: String, systemImage: String? = nil)
 	{
 		self.textView = AnyView(Text(text))
 		if let systemImage
@@ -25,14 +25,14 @@ public class FMToast: ObservableObject
 		self.display = true
 	}
 	
-	func show<T>(_ text: @escaping () -> T) where T: View
+	public func show<T>(_ text: @escaping () -> T) where T: View
 	{
 		self.textView = AnyView(text())
 		self.imageView = nil
 		self.display = true
 	}
 	
-	func show<T,M>(_ text: @escaping () -> T, image: (() -> M)? = nil) where T: View, M: View
+	public func show<T,M>(_ text: @escaping () -> T, image: (() -> M)? = nil) where T: View, M: View
 	{
 		self.textView = AnyView(text())
 		if let img = image?()
