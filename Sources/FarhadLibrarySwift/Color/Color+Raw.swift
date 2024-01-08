@@ -58,6 +58,11 @@ extension Color : RawRepresentable
 	}
 	
 	public var rawValue: String {
+		self.rawValueExtended
+	}
+	
+	/// Extended raw value in hex format
+	public var rawValueExtended: String{
 		var r: CGFloat = 0
 		var g: CGFloat = 0
 		var b: CGFloat = 0
@@ -78,7 +83,7 @@ extension Color : RawRepresentable
 		{
 			String(format: "%0.4X", UInt16(truncatingIfNeeded: Int(Double((v+1.0)*21845.0))))
 		}
-		
 	}
+	
 }
 
