@@ -19,6 +19,8 @@ public extension Color
 		var alpha: CGFloat
 	}
 
+	@available(macOS 13.0, *)
+	@available(iOS 16.0, *)
 	func fmColorComponents() -> ColorComponents
 	{
 		var r: CGFloat = 0
