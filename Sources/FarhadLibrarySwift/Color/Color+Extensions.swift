@@ -8,9 +8,34 @@
 import Foundation
 import SwiftUI
 
-extension Color
+public extension Color
 {
-	public static var faRandom: Color { Color(red: .random(in: 0...1), green: .random(in: 0...1), blue: .random(in: 0...1)) }
+	static var faRandom: Color { Color(red: .random(in: 0...1), green: .random(in: 0...1), blue: .random(in: 0...1)) }
+	
+	struct ColorComponents {
+		var red: CGFloat
+		var green: CGFloat
+		var blue: CGFloat
+		var alpha: CGFloat
+	}
+
+	func fmColorComponents() -> ColorComponents
+	{
+		var r: CGFloat = 0
+		var g: CGFloat = 0
+		var b: CGFloat = 0
+		var a: CGFloat = 0
+		
+#if os(macOS)
+		NSColor(self).getRed(&r, green: &g, blue: &b, alpha: &a)
+#else
+		UIColor(self).getRed(&r, green: &g, blue: &b, alpha: &a)
+#endif
+
+		return ColorComponents(red: r, green: g, blue: b, alpha: a)
+	}
+
+	
 }
 
 extension ShapeStyle where Self == Color

@@ -12,17 +12,38 @@ import SwiftUI
 @available(iOS 16.0, *)
 extension Color : RawRepresentable
 {
+	
+	private static var PTB_32: Double = 1431655765.0  // 0x55555555
+	private static var PTB_16: Double = 21845.0  // 0x5555
+	private static var PTB_8: Double = 255.0
+
 	public init?(rawValue: String) {
 		
 		let rw = Array(rawValue.trimmingPrefix("@").trimmingPrefix("#"))
 		
-		if rw.count == 16
+		if rw.count == 32
+		{
+			self = Color(.sRGB,
+						 red: PT32(String(rw[0..<8])),
+						 green: PT32(String(rw[8..<16])),
+						 blue: PT32(String(rw[16..<24])),
+						 opacity: PT32(String(rw[24..<32])))
+		}
+		else if rw.count == 16
 		{
 			self = Color(.sRGB,
 						 red: PT16(String(rw[0..<4])),
 						 green: PT16(String(rw[4..<8])),
 						 blue: PT16(String(rw[8..<12])),
 						 opacity: PT16(String(rw[12..<16])))
+		}
+		else if rw.count == 12
+		{
+			self = Color(.sRGB,
+						 red: PT16(String(rw[0..<4])),
+						 green: PT16(String(rw[4..<8])),
+						 blue: PT16(String(rw[8..<12])),
+						 opacity: 1.0)
 		}
 		else if rw.count == 8
 		{
@@ -45,43 +66,77 @@ extension Color : RawRepresentable
 			return nil
 		}
 		
+		func PT32(_ v: String) -> Double
+		{
+			guard let r = Int(v, radix: 16) else { return 0.0 }
+			return (Double(r)/Self.PTB_32)-1.0
+		}
 		func PT16(_ v: String) -> Double
 		{
 			guard let r = Int(v, radix: 16) else { return 0.0 }
-			return (Double(r)/21845.0)-1.0
+			return (Double(r)/Self.PTB_16)-1.0
 		}
 		func PT8(_ v: String) -> Double
 		{
 			guard let r = Int(v, radix: 16) else { return 0.0 }
-			return Double(r)/255.0
+			return Double(r)/Self.PTB_8
 		}
 	}
 	
 	public var rawValue: String {
-		self.rawValueExtended
+		self.rawValue16
 	}
 	
-	/// Extended raw value in hex format
-	public var rawValueExtended: String{
-		var r: CGFloat = 0
-		var g: CGFloat = 0
-		var b: CGFloat = 0
-		var a: CGFloat = 0
+	
+	/// Raw value in 6 digit hex format
+	public var rawValue6: String{
+		let components = self.fmColorComponents()
 		
-#if os(macOS)
-		NSColor(self).getRed(&r, green: &g, blue: &b, alpha: &a)
-#else
-		UIColor(self).getRed(&r, green: &g, blue: &b, alpha: &a)
-#endif
-		
-		
-		
-		let value = "@\(cm(r))\(cm(g))\(cm(b))\(cm(a))"
+		let value = "#\(cm(components.red))\(cm(components.green))\(cm(components.blue))"
 		return value
 		
 		func cm(_ v: CGFloat) -> String
 		{
-			String(format: "%0.4X", UInt16(truncatingIfNeeded: Int(Double((v+1.0)*21845.0))))
+			String(format: "%0.2X", UInt8(v*Self.PTB_8))
+		}
+	}
+	
+	/// Raw value in 8 digit hex format
+	public var rawValue8: String{
+		let components = self.fmColorComponents()
+		
+		let value = "#\(cm(components.red))\(cm(components.green))\(cm(components.blue))\(cm(components.alpha))"
+		return value
+		
+		func cm(_ v: CGFloat) -> String
+		{
+			String(format: "%0.2X", UInt8(v*Self.PTB_8))
+		}
+	}
+	
+	/// Raw value in 16 digit hex format
+	public var rawValue16: String{
+		let components = self.fmColorComponents()
+		
+		let value = "@\(cm(components.red))\(cm(components.green))\(cm(components.blue))\(cm(components.alpha))"
+		return value
+		
+		func cm(_ v: CGFloat) -> String
+		{
+			String(format: "%0.4X", UInt16(truncatingIfNeeded: Int(Double((v+1.0)*Self.PTB_16))))
+		}
+	}
+	
+	/// Raw value in 32 digit hex format
+	public var rawValue32: String{
+		let components = self.fmColorComponents()
+		
+		let value = "@\(cm(components.red))\(cm(components.green))\(cm(components.blue))\(cm(components.alpha))"
+		return value
+		
+		func cm(_ v: CGFloat) -> String
+		{
+			String(format: "%0.8X", UInt32(truncatingIfNeeded: Int(Double((v+1.0)*Self.PTB_32))))
 		}
 	}
 	
