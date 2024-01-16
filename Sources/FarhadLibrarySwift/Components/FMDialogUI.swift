@@ -23,13 +23,13 @@ public class FMDialogUI: ObservableObject
 	@Published fileprivate var buttons: [ConfirmButton] = []
 	
 	@discardableResult
-	func show() -> Self {
+	public func show() -> Self {
 		self.isPresented = true
 		return self
 	}
 	
 	@discardableResult
-	func reset() -> Self {
+	public func reset() -> Self {
 		isPresented = false
 		title = ""
 		message = nil
@@ -38,19 +38,19 @@ public class FMDialogUI: ObservableObject
 	}
 	
 	@discardableResult
-	func withTitle(_ t: String) -> Self {
+	public func withTitle(_ t: String) -> Self {
 		self.title = t
 		return self
 	}
 	
 	@discardableResult
-	func withMessage(_ m: String) -> Self {
+	public func withMessage(_ m: String) -> Self {
 		self.message = m
 		return self
 	}
 	
 	@discardableResult
-	func addButton(_ text: String, action: @escaping () -> Void) -> Self {
+	public func addButton(_ text: String, action: @escaping () -> Void) -> Self {
 		self.buttons.append(ConfirmButton(title: text, action: action))
 		return self
 	}
