@@ -93,7 +93,7 @@ public extension EnvironmentValues {
 	}
 }
 
-
+@available(iOS 16.0, *)
 public extension View {
 	func fmDialog() -> some View {
 		modifier(FMDialogUI_Modofier())
