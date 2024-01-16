@@ -58,9 +58,9 @@ public class FMDialogUI: ObservableObject
 	
 }
 
-struct FMConfirmDialogUI_Modofier: ViewModifier {
-	@StateObject var build: FMDialogUI = FMDialogUI()
-	func body(content: Content) -> some View {
+public struct FMDialogUI_Modofier: ViewModifier {
+	@StateObject public var build: FMDialogUI = FMDialogUI()
+	public func body(content: Content) -> some View {
 		content
 			.environment(\.fmDialog, build)
 			.alert(build.title, isPresented: $build.isPresented, presenting: build) { bd in
@@ -81,21 +81,21 @@ struct FMConfirmDialogUI_Modofier: ViewModifier {
 	}
 }
 
-private struct FMConfirmDialogUIKey: EnvironmentKey {
+private struct FMDialogUIKey: EnvironmentKey {
 	static let defaultValue: FMDialogUI = FMDialogUI()
 }
 
 public extension EnvironmentValues {
 	var fmDialog: FMDialogUI {
-		get { self[FMConfirmDialogUIKey.self] }
-		set { self[FMConfirmDialogUIKey.self] = newValue }
+		get { self[FMDialogUIKey.self] }
+		set { self[FMDialogUIKey.self] = newValue }
 	}
 }
 
 
 public extension View {
 	func fmDialog() -> some View {
-		modifier(FMConfirmDialogUI_Modofier())
+		modifier(FMDialogUI_Modofier())
 	}
 }
 
