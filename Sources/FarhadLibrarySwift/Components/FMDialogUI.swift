@@ -58,6 +58,7 @@ public class FMDialogUI: ObservableObject
 	
 }
 
+@available(iOS 16.0, *)
 public struct FMDialogUI_Modofier: ViewModifier {
 	@StateObject public var build: FMDialogUI = FMDialogUI()
 	public func body(content: Content) -> some View {
