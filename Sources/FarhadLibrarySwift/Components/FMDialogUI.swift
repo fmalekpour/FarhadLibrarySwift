@@ -100,6 +100,8 @@ public extension View {
 	}
 }
 
+#if FM_ALLOW_PREVIEW
+
 private struct FMConfirmDialogUI_Preview: View {
 	@Environment(\.fmDialog) var confirmDialog
 	var body: some View {
@@ -158,3 +160,5 @@ private struct FMConfirmDialogUI_Preview: View {
 	FMConfirmDialogUI_Preview()
 		.fmDialog()
 }
+
+#endif
