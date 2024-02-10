@@ -9,9 +9,9 @@ import Foundation
 import SwiftUI
 
 @available(iOS 15.0, *)
-public struct FMSheet_CloseButton: ViewModifier
+public struct FMSheet_CloseButton<V: View>: ViewModifier
 {
-	var closeButtonImage: Image
+	var closeButtonImage: () -> V
 	@Environment(\.verticalSizeClass) private var verticalSizeClass
 	@Environment(\.dismiss) private var dismissDialog
 	
@@ -24,7 +24,7 @@ public struct FMSheet_CloseButton: ViewModifier
 						Button(action: {
 							dismissDialog()
 						}, label: {
-							closeButtonImage
+							closeButtonImage()
 						})
 					}
 				}
@@ -35,6 +35,16 @@ public struct FMSheet_CloseButton: ViewModifier
 @available(iOS 15.0, *)
 public extension View {
 	func fmAutoCloseButton(image: Image) -> some View {
-		modifier(FMSheet_CloseButton(closeButtonImage: image))
+		modifier(FMSheet_CloseButton(closeButtonImage: {
+			image
+		}))
+	}
+	func fmAutoCloseButton<T: View>(_ view: @escaping () -> T) -> some View {
+		modifier(FMSheet_CloseButton(closeButtonImage: view))
+	}
+	func fmAutoCloseButton<T: View>(_ view: T) -> some View {
+		modifier(FMSheet_CloseButton(closeButtonImage: {
+			view
+		}))
 	}
 }
