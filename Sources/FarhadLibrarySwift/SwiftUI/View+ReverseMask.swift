@@ -7,6 +7,7 @@ import Foundation
 import SwiftUI
 
 @available(iOS 15.0, *)
+@available(macOS 12.0, *)
 extension View {
 	@inlinable
 	public func fmReverseMask<Mask: View>(alignment: Alignment = .center, @ViewBuilder _ mask: () -> Mask) -> some View

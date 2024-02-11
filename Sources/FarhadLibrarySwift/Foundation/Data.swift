@@ -11,6 +11,7 @@ public extension Data
 {
 	
 	@available(iOS 16.0, *)
+	@available(macOS 13.0, *)
 	func fmBase64EncodedString(options: Base64EncodingOptions = []) -> String?
 	{
 		var res = self.base64EncodedString(options: options)
@@ -21,12 +22,14 @@ public extension Data
 	}
 
 	@available(iOS 16.0, *)
+	@available(macOS 13.0, *)
 	func fmBase64EncodedData(options: Base64EncodingOptions = []) -> Data?
 	{
 		self.fmBase64EncodedString(options: options)?.data(using: .utf8)
 	}
 
 	@available(iOS 16.0, *)
+	@available(macOS 13.0, *)
 	func fmBase64DecodedString(options: Base64DecodingOptions = []) -> String?
 	{
 		if let data = self.fmBase64DecodedData(options: options)
@@ -37,6 +40,7 @@ public extension Data
 	}
 	
 	@available(iOS 16.0, *)
+	@available(macOS 13.0, *)
 	func fmBase64DecodedData(options: Base64DecodingOptions = []) -> Data?
 	{
 		if let string = String(data: self, encoding: .utf8)

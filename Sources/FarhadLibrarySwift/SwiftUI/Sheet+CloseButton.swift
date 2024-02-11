@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 
 @available(iOS 15.0, *)
+@available(macOS 12.0, *)
 public struct FMSheet_CloseButton<V: View>: ViewModifier
 {
 	var closeButtonImage: () -> V
@@ -17,6 +18,7 @@ public struct FMSheet_CloseButton<V: View>: ViewModifier
 	
 	public func body(content: Content) -> some View {
 		content
+		#if os(iOS) || os(watchOS)
 			.toolbar(content: {
 				ToolbarItemGroup(placement: .topBarLeading) {
 					if verticalSizeClass == UserInterfaceSizeClass.compact
@@ -29,10 +31,12 @@ public struct FMSheet_CloseButton<V: View>: ViewModifier
 					}
 				}
 			})
+		#endif
 	}
 }
 
 @available(iOS 15.0, *)
+@available(macOS 12.0, *)
 public extension View {
 	func fmAutoCloseButton(image: Image) -> some View {
 		modifier(FMSheet_CloseButton(closeButtonImage: {

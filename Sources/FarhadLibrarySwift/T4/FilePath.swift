@@ -86,11 +86,19 @@ public extension T4
 	{
 		if let path
 		{
+			#if os(iOS) || os(watchOS)
 			if #available(iOS 16.0, *) {
 				return URL(filePath: path)
 			} else {
 				return URL(fileURLWithPath: path)
 			}
+			#elseif os(macOS)
+			if #available(macOS 13.0, *) {
+				return URL(filePath: path)
+			} else {
+				return URL(fileURLWithPath: path)
+			}
+			#endif
 		}
 		return nil
 	}
