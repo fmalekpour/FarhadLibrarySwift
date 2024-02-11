@@ -27,6 +27,9 @@ public class FMDialogManager: ObservableObject
 	@Published fileprivate var message: String? = nil
 	@Published fileprivate var buttons: [DialogButton] = []
 	
+	public init() {
+	}
+	
 	public func present(_ title: String, _ message: String, buttons: () -> [DialogButton]) {
 		self.isPresented = false
 		self.title = title
