@@ -15,9 +15,9 @@ public class FMDialogManager: ObservableObject
 		fileprivate var title: String
 		fileprivate var action: () -> Void
 		
-		init(title: String, action: @escaping () -> Void) {
+		public init(title: String, action: (() -> Void)? ) {
 			self.title = title
-			self.action = action
+			self.action = action ?? {}
 		}
 	}
 	
