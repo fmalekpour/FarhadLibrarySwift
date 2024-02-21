@@ -9,7 +9,7 @@ import Foundation
 
 public extension T4
 {
-	static func FILE_SIZE(filePath: String) -> Int64
+	static func FILE_SIZE(_ filePath: String) -> Int64
 	{
 		do {
 			let fileAttributes = try FileManager.default.attributesOfItem(atPath: filePath)
@@ -19,17 +19,17 @@ public extension T4
 		return Int64(0)
 	}
 	
-	static func FILE_EXISTS(filePath: String) -> Bool {
+	static func FILE_EXISTS(_ filePath: String) -> Bool {
 		return FileManager.default.fileExists(atPath: filePath)
 	}
 	
-	static func FILE_IS_DIRECTORY(filePath: String) -> Bool {
+	static func FILE_IS_DIRECTORY(_ filePath: String) -> Bool {
 		var isDir: ObjCBool = true
 		let exists = FileManager.default.fileExists(atPath: filePath, isDirectory: &isDir)
 		return exists && isDir.boolValue
 	}
 	
-	static func FILE_MTIME(filePath: String) -> TimeInterval {
+	static func FILE_MTIME(_ filePath: String) -> TimeInterval {
 		do {
 			let fileAttributes = try FileManager.default.attributesOfItem(atPath: filePath)
 			let date = fileAttributes[.modificationDate] as? Date
@@ -39,7 +39,7 @@ public extension T4
 		return TimeInterval(0)
 	}
 	
-	static func FILE_CTIME(filePath: String) -> TimeInterval {
+	static func FILE_CTIME(_ filePath: String) -> TimeInterval {
 		do {
 			let fileAttributes = try FileManager.default.attributesOfItem(atPath: filePath)
 			let date = fileAttributes[.creationDate] as? Date
@@ -50,7 +50,7 @@ public extension T4
 	}
 	
 	@discardableResult
-	static func FILE_SET_MTIME(filePath: String, timeStamp: TimeInterval) -> Bool {
+	static func FILE_SET_MTIME(_ filePath: String, timeStamp: TimeInterval) -> Bool {
 		do {
 			try FileManager.default.setAttributes([.modificationDate : Date(timeIntervalSince1970: timeStamp)], ofItemAtPath: filePath)
 			return true
@@ -60,7 +60,7 @@ public extension T4
 	}
 	
 	@discardableResult
-	static func FILE_SET_CTIME(filePath: String, timeStamp: TimeInterval) -> Bool {
+	static func FILE_SET_CTIME(_ filePath: String, timeStamp: TimeInterval) -> Bool {
 		do {
 			try FileManager.default.setAttributes([.creationDate : Date(timeIntervalSince1970: timeStamp)], ofItemAtPath: filePath)
 			return true
@@ -73,7 +73,7 @@ public extension T4
 	{
 		do {
 			
-			if T4.FILE_EXISTS(filePath: toPath)
+			if T4.FILE_EXISTS(toPath)
 			{
 				if(overrite)
 				{
@@ -99,7 +99,7 @@ public extension T4
 	{
 		do {
 			
-			if T4.FILE_EXISTS(filePath: toPath)
+			if T4.FILE_EXISTS(toPath)
 			{
 				if(overrite)
 				{
@@ -121,10 +121,10 @@ public extension T4
 	}
 	
 	@discardableResult
-	static func FILE_DELETE(filePath: String) -> Bool
+	static func FILE_DELETE(_ filePath: String) -> Bool
 	{
 		do {
-			if T4.FILE_EXISTS(filePath: filePath)
+			if T4.FILE_EXISTS(filePath)
 			{
 				try FileManager.default.removeItem(atPath: filePath)
 			}
