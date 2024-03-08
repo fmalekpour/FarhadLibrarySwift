@@ -9,7 +9,10 @@ import Foundation
 
 public extension String
 {
+	@available(tvOS 16.0, *)
+	@available(macOS 13.0, *)
 	@available(iOS 16.0, *)
+	
 	func fmParseQueryString() -> [String: Any]
 	{
 		var RV: [String: Any] = [:]
