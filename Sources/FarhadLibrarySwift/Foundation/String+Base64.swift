@@ -1,5 +1,5 @@
 //
-//  String.swift
+//  String+Base64.swift
 //
 //
 //  Created by Farhad Malekpour on 12/28/23.
@@ -10,14 +10,6 @@ import CryptoKit
 
 public extension String
 {
-	init(randomLength: Int, allowdCharacters: String = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
-	{
-		let s = "\(allowdCharacters)\(allowdCharacters)\(allowdCharacters)\(allowdCharacters)\(allowdCharacters)"
-			.shuffled()
-			.prefix(randomLength)
-		
-		self.init(s)
-	}
 	
 	@available(iOS 16.0, *)
 	@available(macOS 13.0, *)
