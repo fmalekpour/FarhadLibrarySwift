@@ -11,6 +11,7 @@ import CryptoKit
 public extension String
 {
 	
+	@available(tvOS 16.0, *)
 	@available(iOS 16.0, *)
 	@available(macOS 13.0, *)
 	func fmBase64EncodedString(options: Data.Base64EncodingOptions = []) -> String?
@@ -18,6 +19,7 @@ public extension String
 		self.data(using: .utf8)?.fmBase64EncodedString(options: options)
 	}
 	
+	@available(tvOS 16.0, *)
 	@available(iOS 16.0, *)
 	@available(macOS 13.0, *)
 	func fmBase64EncodedData(options: Data.Base64EncodingOptions = []) -> Data?
@@ -25,6 +27,7 @@ public extension String
 		self.data(using: .utf8)?.fmBase64EncodedData(options: options)
 	}
 	
+	@available(tvOS 16.0, *)
 	@available(iOS 16.0, *)
 	@available(macOS 13.0, *)
 	func fmBase64DecodedString(options: Data.Base64DecodingOptions = []) -> String?
@@ -32,6 +35,7 @@ public extension String
 		self.data(using: .utf8)?.fmBase64DecodedString(options: options)
 	}
 
+	@available(tvOS 16.0, *)
 	@available(iOS 16.0, *)
 	@available(macOS 13.0, *)
 	func fmBase64DecodedData(options: Data.Base64DecodingOptions = []) -> Data?

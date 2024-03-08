@@ -39,6 +39,7 @@ public class FMDialogManager: ObservableObject
 	}
 }
 
+@available(tvOS 16.0, *)
 @available(macOS 12.0, *)
 @available(iOS 16.0, *)
 public struct FMDialogManager_Modifier: ViewModifier {
@@ -63,6 +64,7 @@ public struct FMDialogManager_Modifier: ViewModifier {
 	}
 }
 
+@available(tvOS 16.0, *)
 @available(macOS 12.0, *)
 @available(iOS 16.0, *)
 public extension View {

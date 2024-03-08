@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 
+@available(tvOS 17.0, *)
 @available(macOS 14.0, *)
 @available(iOS 17.0, *)
 public struct FMTextField: View {
@@ -168,9 +169,11 @@ public struct FMTextField: View {
 				focusedField = .textField
 			}
 		}
+		#if !os(tvOS) && !os(watchOS)
 		.alignmentGuide(.listRowSeparatorLeading, computeValue: { dimension in
 			0
 		})
+		#endif
 		.onChange(of: focusedField) { oldValue, newValue in
 			withAnimation {
 				hasFocusAnim = (newValue != nil)
@@ -180,6 +183,7 @@ public struct FMTextField: View {
 	}
 }
 
+@available(tvOS 17.0, *)
 @available(macOS 14.0, *)
 @available(iOS 17.0, *)
 public struct FMSecureTextField: View {
@@ -201,6 +205,7 @@ public struct FMSecureTextField: View {
 }
 
 
+@available(tvOS 17.0, *)
 @available(macOS 14.0, *)
 @available(iOS 17.0, *)
 private struct FMTextField_Preview: View {
@@ -243,6 +248,7 @@ private struct FMTextField_Preview: View {
 
 
 
+@available(tvOS 16.0, *)
 @available(macOS 14.0, *)
 @available(iOS 17.0, *)
 #Preview {

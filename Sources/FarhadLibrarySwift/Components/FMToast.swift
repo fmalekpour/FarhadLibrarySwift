@@ -6,6 +6,7 @@
 
 import SwiftUI
 
+@available(macOS 14.0, *)
 public class FMToast: ObservableObject
 {
 	fileprivate init(){}
@@ -72,10 +73,12 @@ public struct FMToastConfig
 	
 }
 
+@available(macOS 14.0, *)
 private struct FMToastKey: EnvironmentKey {
 	static let defaultValue: FMToast = FMToast()
 }
 
+@available(macOS 14.0, *)
 public extension EnvironmentValues {
 	var fmToast: FMToast {
 		get { self[FMToastKey.self] }
@@ -83,7 +86,9 @@ public extension EnvironmentValues {
 	}
 }
 
+@available(tvOS 17.0, *)
 @available(iOS 17.0, *)
+@available(macOS 14.0, *)
 fileprivate struct FMToast_Modifier: ViewModifier
 {
 	init(config: ((_: inout FMToastConfig) -> Void)?) {
@@ -157,14 +162,18 @@ fileprivate struct FMToast_Modifier: ViewModifier
 }
 
 public extension View {
+	@available(tvOS 17.0, *)
 	@available(iOS 17.0, *)
+	@available(macOS 14.0, *)
 	func fmToast(config: ((_: inout FMToastConfig) -> Void)? = nil) -> some View {
 		modifier(FMToast_Modifier(config: config))
 	}
 }
 
 
+@available(tvOS 17.0, *)
 @available(iOS 17.0, *)
+@available(macOS 14.0, *)
 private struct FMToastPreview: View {
 	var body: some View {
 		NavigationStack{
@@ -172,9 +181,11 @@ private struct FMToastPreview: View {
 				FMToastPreview_Page()
 			}
 			.navigationTitle("Test Toast")
+			#if os(iOS)
 			.navigationBarTitleDisplayMode(.inline)
 			.toolbar(.visible, for: .navigationBar)
 			.toolbarBackground(.visible, for: .navigationBar)
+			#endif
 		}
 		
 		.fmToast { config in
@@ -184,6 +195,7 @@ private struct FMToastPreview: View {
 	}
 }
 
+@available(macOS 14.0, *)
 private struct FMToastPreview_Page: View {
 	@Environment(\.fmToast) var toast
 	var body: some View {
@@ -213,7 +225,9 @@ private struct FMToastPreview_Page: View {
 	}
 }
 
+@available(tvOS 17.0, *)
 @available(iOS 17.0, *)
+@available(macOS 14.0, *)
 #Preview {
 	FMToastPreview()
 }

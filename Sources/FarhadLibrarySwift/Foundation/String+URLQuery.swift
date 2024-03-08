@@ -35,7 +35,7 @@ public extension String
 		let comps = bs.split(separator: "&")
 		for part in comps
 		{
-			var p = String(part).fmTrim()
+			let p = String(part).fmTrim()
 			guard !p.isEmpty else { continue }
 			let m = p.split(separator: ":")
 			if m.count > 1

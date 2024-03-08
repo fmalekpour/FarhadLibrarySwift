@@ -10,6 +10,7 @@ import Foundation
 public extension Data
 {
 	
+	@available(tvOS 16.0, *)
 	@available(iOS 16.0, *)
 	@available(macOS 13.0, *)
 	func fmBase64EncodedString(options: Base64EncodingOptions = []) -> String?
@@ -21,6 +22,7 @@ public extension Data
 		return res
 	}
 
+	@available(tvOS 16.0, *)
 	@available(iOS 16.0, *)
 	@available(macOS 13.0, *)
 	func fmBase64EncodedData(options: Base64EncodingOptions = []) -> Data?
@@ -28,6 +30,7 @@ public extension Data
 		self.fmBase64EncodedString(options: options)?.data(using: .utf8)
 	}
 
+	@available(tvOS 16.0, *)
 	@available(iOS 16.0, *)
 	@available(macOS 13.0, *)
 	func fmBase64DecodedString(options: Base64DecodingOptions = []) -> String?
@@ -39,6 +42,7 @@ public extension Data
 		return nil
 	}
 	
+	@available(tvOS 16.0, *)
 	@available(iOS 16.0, *)
 	@available(macOS 13.0, *)
 	func fmBase64DecodedData(options: Base64DecodingOptions = []) -> Data?

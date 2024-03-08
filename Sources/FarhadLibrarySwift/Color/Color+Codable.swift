@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 
 
+@available(tvOS 17.0, *)
 @available(macOS 14.0, *)
 @available(iOS 17.0, *)
 extension Color: Codable

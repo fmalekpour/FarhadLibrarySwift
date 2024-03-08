@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 
+@available(tvOS 16.0, *)
 @available(macOS 13.0, *)
 @available(iOS 16.0, *)
 extension Color : RawRepresentable

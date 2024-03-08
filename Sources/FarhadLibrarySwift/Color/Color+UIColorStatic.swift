@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-#if os(iOS) || os(watchOS)
+#if os(iOS)
 
 @available(iOS 15.0, *)
 public extension Color

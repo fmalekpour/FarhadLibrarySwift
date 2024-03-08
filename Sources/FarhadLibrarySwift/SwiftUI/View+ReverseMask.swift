@@ -6,6 +6,7 @@
 import Foundation
 import SwiftUI
 
+@available(tvOS 15.0, *)
 @available(iOS 15.0, *)
 @available(macOS 12.0, *)
 extension View {

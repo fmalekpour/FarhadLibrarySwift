@@ -8,6 +8,7 @@
 import Foundation
 import SwiftUI
 
+@available(tvOS 15.0, *)
 @available(iOS 15.0, *)
 @available(macOS 12.0, *)
 public struct FMSheet_CloseButton<V: View>: ViewModifier
@@ -35,6 +36,7 @@ public struct FMSheet_CloseButton<V: View>: ViewModifier
 	}
 }
 
+@available(tvOS 15.0, *)
 @available(iOS 15.0, *)
 @available(macOS 12.0, *)
 public extension View {
