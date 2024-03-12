@@ -32,4 +32,16 @@ public extension T4 {
 		return ""
 	}
 
+	@available(iOS 16.0, *)
+	static var DEVICE_UID: String {
+		if let uid = UserDefaults.standard.string(forKey: "_app_deviceUUID")
+		{
+			return uid
+		}
+		
+		let uid = UUID().uuidString.replacing("-", with: "")
+		UserDefaults.standard.set(uid, forKey: "_app_deviceUUID")
+		return uid
+		
+	}
 }
