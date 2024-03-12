@@ -32,6 +32,8 @@ public extension T4 {
 		return ""
 	}
 
+	@available(tvOS 16.0, *)
+	@available(macOS 13.0, *)
 	@available(iOS 16.0, *)
 	static var DEVICE_UID: String {
 		if let uid = UserDefaults.standard.string(forKey: "_app_deviceUUID")
