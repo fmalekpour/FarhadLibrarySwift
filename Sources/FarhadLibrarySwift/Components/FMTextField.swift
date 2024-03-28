@@ -1,11 +1,10 @@
 //
-//  FMTextField.swift
+//  TextField22.swift
+//  test-swiftui-components
 //
-//
-//  Created by Farhad Malekpour on 2/21/24.
+//  Created by Farhad Malekpour on 3/26/24.
 //
 
-import Foundation
 import SwiftUI
 
 @available(tvOS 17.0, *)
@@ -19,24 +18,29 @@ public struct FMTextField: View {
 	@FocusState private var focusedField: Field?
 	@State private var hasFocusAnim: Bool = false
 	private var mIsSecure: Bool
-	private var mShowPass: Bool
-	@State private var mIsShowingPass: Bool = false
+	@Binding private var mShowPass: Bool
+	//@State private var mIsShowingPass: Bool = false
 	@State private var mIsShowingPassTrans: Bool = false
+	private var mAllowShowPass: Bool
+	var mOnShowPassChanged: Binding<Bool> = .constant(false)
 	
 	public init(text: Binding<String>, prompt: String = "", label: String) {
 		_mText = text
+		_mShowPass = .constant(false)
 		self.mLabel = label
 		self.mIsSecure = false
-		self.mShowPass = false
+		//self.mShowPass = false
 		self.mPrompt = prompt
+		self.mAllowShowPass = false
 	}
 	
-	fileprivate init(text: Binding<String>, prompt: String = "", label: String, isSecure: Bool, showPass: Bool) {
+	fileprivate init(text: Binding<String>, prompt: String = "", label: String, isSecure: Bool, allowShowPass: Bool, showPass: Binding<Bool>) {
 		_mText = text
 		self.mLabel = label
 		self.mIsSecure = isSecure
-		self.mShowPass = showPass
+		_mShowPass = showPass
 		self.mPrompt = prompt
+		self.mAllowShowPass = allowShowPass
 	}
 	
 	enum Field: Hashable {
@@ -46,6 +50,9 @@ public struct FMTextField: View {
 	}
 	
 	public var body: some View {
+#if os(macOS)
+		FMTextField_Mac(mText: $mText, mLabel: mLabel, mPrompt: mPrompt, mIsSecure: mIsSecure, mShowPass: $mShowPass, mAllowShowPass: mAllowShowPass)
+#else
 		ZStack{
 			VStack(alignment: .leading, spacing: 0){
 				if hasFocusAnim || !mText.isEmpty
@@ -60,41 +67,49 @@ public struct FMTextField: View {
 						{
 							TextField(text: $mText, prompt: Text("")) {}
 								.focused($focusedField, equals: .secureShowField)
-								.opacity(!mIsShowingPass ? 0.0 : 1.0)
+								.opacity(!mShowPass ? 0.0 : 1.0)
 								.autocorrectionDisabled()
-								.disabled(!mIsShowingPass && !mIsShowingPassTrans)
-								.foregroundStyle(Color.accentColor)
-							#if os(iOS)
-								.textInputAutocapitalization(.never)
-							#endif
-							
-							
-							SecureField(text: $mText, prompt: Text("")) {}
-								.focused($focusedField, equals: .secureField)
-								.opacity(mIsShowingPass ? 0.0 : 1.0)
-								.autocorrectionDisabled()
-								.disabled(mIsShowingPass && !mIsShowingPassTrans)
+								.disabled(!mShowPass && !mIsShowingPassTrans)
 								.foregroundStyle(Color.accentColor)
 #if os(iOS)
 								.textInputAutocapitalization(.never)
 #endif
+							
+							
+							SecureField(text: $mText, prompt: Text("")) {}
+								.focused($focusedField, equals: .secureField)
+								.opacity(mShowPass ? 0.0 : 1.0)
+								.autocorrectionDisabled()
+								.disabled(mShowPass && !mIsShowingPassTrans)
+								.foregroundStyle(Color.accentColor)
+							
+#if os(iOS)
+								.textInputAutocapitalization(.never)
+#endif
+							
 						}
 						else
 						{
+							
 							TextField(text: $mText, prompt: Text("")) {}
 								.focused($focusedField, equals: .textField)
+								.frame(maxWidth: .infinity)
 								.foregroundStyle(Color.accentColor)
+							
+							
 						}
 						TextField(text: .constant(""), prompt: Text("")) {}
 							.opacity(0.0)
 							.disabled(true)
 							.allowsHitTesting(false)
+						
 					}
+					
 					
 					
 					if hasFocusAnim
 					{
-						if !mIsSecure || !mShowPass
+						if !mIsSecure || !mAllowShowPass
 						{
 							Button(action: {
 								mText = ""
@@ -106,12 +121,12 @@ public struct FMTextField: View {
 						}
 					}
 					
-					if mIsSecure && mShowPass && ( hasFocusAnim || !mText.isEmpty)
+					if mIsSecure && mAllowShowPass && ( hasFocusAnim || !mText.isEmpty)
 					{
 						Button(action: {
 							mIsShowingPassTrans = true
 							let currentFocus = focusedField
-							mIsShowingPass.toggle()
+							mShowPass.toggle()
 							if currentFocus != nil
 							{
 								Task{
@@ -125,7 +140,7 @@ public struct FMTextField: View {
 								mIsShowingPassTrans = false
 							}
 						}, label: {
-							Image(systemName: mIsShowingPass ? "eye.slash" : "eye")
+							Image(systemName: mShowPass ? "eye.slash" : "eye")
 						})
 						.buttonStyle(.borderless)
 						.foregroundStyle(.placeholder)
@@ -153,6 +168,7 @@ public struct FMTextField: View {
 					.font(.caption)
 				TextField(text: .constant(""), prompt: Text("")) {}
 					.disabled(true)
+					.allowsHitTesting(false)
 				
 			})
 			.allowsHitTesting(false)
@@ -162,26 +178,78 @@ public struct FMTextField: View {
 		.onTapGesture {
 			if mIsSecure
 			{
-				focusedField = (mIsShowingPass ? .secureShowField : .secureField)
+				focusedField = (mShowPass ? .secureShowField : .secureField)
 			}
 			else
 			{
+				//print("TAP")
 				focusedField = .textField
 			}
 		}
-		#if !os(tvOS) && !os(watchOS)
+#if !os(tvOS) && !os(watchOS)
 		.alignmentGuide(.listRowSeparatorLeading, computeValue: { dimension in
 			0
 		})
-		#endif
+#endif
 		.onChange(of: focusedField) { oldValue, newValue in
 			withAnimation {
 				hasFocusAnim = (newValue != nil)
 			}
 		}
+#endif
 		
 	}
 }
+
+#if os(macOS)
+@available(macOS 14.0, *)
+fileprivate struct FMTextField_Mac: View
+{
+	@Binding fileprivate var mText: String
+	fileprivate var mLabel: String
+	fileprivate var mPrompt: String
+	fileprivate var mIsSecure: Bool
+	@Binding fileprivate var mShowPass: Bool
+	fileprivate var mAllowShowPass: Bool = true
+	//@State var mIsShowingPass: Bool = false
+	
+	
+	var body: some View {
+		VStack(alignment: .leading){
+			Text(mLabel)
+			
+			HStack{
+				if !mIsSecure || mShowPass
+				{
+					TextField(text: $mText, prompt: Text(mPrompt)) {}
+						.textFieldStyle(.roundedBorder)
+						.foregroundStyle(Color.accentColor)
+				}
+				else if mIsSecure
+				{
+					SecureField(text: $mText, prompt: Text(mPrompt)) {}
+						.autocorrectionDisabled()
+						.textFieldStyle(.roundedBorder)
+						.foregroundStyle(Color.accentColor)
+				}
+				
+				if mIsSecure && mAllowShowPass
+				{
+					Button(action: {
+						mShowPass.toggle()
+					}, label: {
+						Image(systemName: mShowPass ? "eye.slash" : "eye")
+					})
+					.buttonStyle(.borderless)
+				}
+				
+			}
+		}
+	}
+}
+#endif
+
+
 
 @available(tvOS 17.0, *)
 @available(macOS 14.0, *)
@@ -189,30 +257,60 @@ public struct FMTextField: View {
 public struct FMSecureTextField: View {
 	@Binding private var mText: String
 	private var mLabel: String
-	private var mShowPass: Bool
+	//private var mShowPass: Bool
 	private var mPrompt: String
+	private var mAllowShowPass: Bool = true
+	private var mShowPass: Binding<Bool>? = nil
+	@State private var mInternalShowPass: Bool = false
 	
-	public init(text: Binding<String>, prompt: String = "", label: String, showPass: Bool = true) {
+	public init(text: Binding<String>, prompt: String = "", label: String) {
 		_mText = text
 		self.mLabel = label
-		self.mShowPass = showPass
 		self.mPrompt = prompt
 	}
 	
 	public var body: some View {
-		FMTextField(text: $mText, prompt: mPrompt, label: mLabel, isSecure: true, showPass: mShowPass)
+		FMTextField(text: $mText,
+					prompt: mPrompt,
+					label: mLabel,
+					isSecure: true,
+					allowShowPass: mAllowShowPass,
+					showPass: (mShowPass != nil ? mShowPass! : $mInternalShowPass))
 	}
+	
+	func allowShowPass(_ allow: Bool) -> Self
+	{
+		var RV = self
+		RV.mAllowShowPass = allow
+		return RV
+	}
+	
+	func showPass(_ show: Bool) -> Self
+	{
+		var RV = self
+		RV._mInternalShowPass = State(initialValue: true)
+		return RV
+	}
+	
+	func showPass(_ show: Binding<Bool>) -> Self
+	{
+		var RV = self
+		RV.mShowPass = show
+		return RV
+	}
+	
 }
 
 
 @available(tvOS 17.0, *)
 @available(macOS 14.0, *)
 @available(iOS 17.0, *)
-private struct FMTextField_Preview: View {
+struct FMTextField_Preview: View {
 	@State var mText1: String = ""
 	@State var mText2: String = "Test Input"
 	@State var mText3: String = ""
 	@State var mText4: String = "a hard to guess pass"
+	@State var mShowPassState: Bool = false
 	
 	var body: some View {
 		List{
@@ -232,6 +330,17 @@ private struct FMTextField_Preview: View {
 			Section{
 				FMSecureTextField(text: $mText3, label: "Secure 1")
 				FMSecureTextField(text: $mText4, label: "Secure 2")
+				FMSecureTextField(text: $mText4, label: "Secure 3 - no show pass")
+					.allowShowPass(false)
+				FMSecureTextField(text: $mText4, label: "Secure 4 - show pass by default")
+					.allowShowPass(true)
+					.showPass(true)
+				FMSecureTextField(text: $mText4, label: "Secure 5 - show pass binding")
+					.allowShowPass(true)
+					.showPass($mShowPassState)
+			}
+			.onChange(of: mShowPassState) { oldValue, newValue in
+				print("Showpass-> \(newValue)")
 			}
 			
 			
@@ -254,3 +363,5 @@ private struct FMTextField_Preview: View {
 #Preview {
 	FMTextField_Preview()
 }
+
+
