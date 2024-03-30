@@ -216,7 +216,10 @@ fileprivate struct FMTextField_Mac: View
 	
 	var body: some View {
 		VStack(alignment: .leading){
-			Text(mLabel)
+			if !mLabel.isEmpty
+			{
+				Text(mLabel)
+			}
 			
 			HStack{
 				if !mIsSecure || mShowPass
