@@ -31,7 +31,15 @@ public extension T4 {
 		}
 		return ""
 	}
-
+	
+	static var APP_RUNNING_STOREID: Int? {
+		if let RV = Bundle.main.infoDictionary?["FMAppStoreID"] as? Int
+		{
+			return RV
+		}
+		return nil
+	}
+	
 	@available(tvOS 16.0, *)
 	@available(macOS 13.0, *)
 	@available(iOS 16.0, *)
