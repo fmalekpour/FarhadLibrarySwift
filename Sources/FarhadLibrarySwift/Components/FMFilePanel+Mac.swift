@@ -107,7 +107,7 @@ public struct FMFilePanelConfiguration
 	fileprivate var canChooseDirectories: Bool = false
 	fileprivate var allowsMultipleSelection: Bool = false
 	
-	static var selectFileForReading: Configuration = Configuration(
+	public static var selectFileForReading: Configuration = Configuration(
 		panelType: .Open,
 		
 		nameFieldLabel: "Open File:",
@@ -124,9 +124,9 @@ public struct FMFilePanelConfiguration
 		
 	)
 	
-	static var selectFilesForReading: Configuration = .selectFileForReading.withAllowsMultipleSelection(true)
+	public static var selectFilesForReading: Configuration = .selectFileForReading.withAllowsMultipleSelection(true)
 	
-	static var selectDirectory: Configuration = Configuration(
+	public static var selectDirectory: Configuration = Configuration(
 		panelType: .Open,
 		
 		nameFieldLabel: "",
@@ -143,7 +143,7 @@ public struct FMFilePanelConfiguration
 		
 	)
 	
-	static var selectFileForWriting: Configuration = Configuration(
+	public static var selectFileForWriting: Configuration = Configuration(
 		panelType: .Save,
 		
 		nameFieldLabel: "Save as:",
