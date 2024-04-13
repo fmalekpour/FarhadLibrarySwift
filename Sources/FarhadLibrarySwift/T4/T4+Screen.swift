@@ -18,7 +18,7 @@ import UIKit
 
 public extension T4
 {
-	var SCALE_FACTOR: CGFloat {
+	static var SCALE_FACTOR: CGFloat {
 		#if os(watchOS)
 		return WKInterfaceDevice.current().screenScale
 		#elseif os(macOS)
@@ -28,7 +28,7 @@ public extension T4
 		#endif
 	}
 	
-	var SCALE_FACTOR_PHYSICAL: CGFloat {
+	static var SCALE_FACTOR_PHYSICAL: CGFloat {
 		#if os(watchOS)
 		return WKInterfaceDevice.current().screenScale
 		#elseif os(macOS)
@@ -38,7 +38,7 @@ public extension T4
 		#endif
 	}
 	
-	var L4A_SCREEN_BOUNDS: CGRect {
+	static var L4A_SCREEN_BOUNDS: CGRect {
 		#if os(watchOS)
 		return WKInterfaceDevice.current().screenScale
 		#elseif os(tvOS)
