@@ -40,7 +40,7 @@ public extension T4
 	
 	static var L4A_SCREEN_BOUNDS: CGRect {
 		#if os(watchOS)
-		return WKInterfaceDevice.current().screenScale
+		return WKInterfaceDevice.current().screenBounds
 		#elseif os(tvOS)
 		return UIScreen.main.bounds
 		#elseif os(macOS)
