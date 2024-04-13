@@ -30,7 +30,9 @@ public extension Color
 		var a: CGFloat = 0
 		
 #if os(macOS)
-		NSColor(self).getRed(&r, green: &g, blue: &b, alpha: &a)
+//		NSColor(self).getRed(&r, green: &g, blue: &b, alpha: &a)
+		
+		NSColor(self).usingColorSpace(.sRGB)?.getRed(&r, green: &g, blue: &b, alpha: &a)
 #else
 		UIColor(self).getRed(&r, green: &g, blue: &b, alpha: &a)
 #endif
