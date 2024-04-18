@@ -14,4 +14,6 @@ public extension Int32
 		let rn = Int32(truncatingIfNeeded: UInt32(arc4random())/2)
 		self.init(Int32((rn % ((to)-(randomFrom)))+(randomFrom)))
 	}
+	
+
 }
