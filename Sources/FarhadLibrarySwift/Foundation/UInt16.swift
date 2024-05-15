@@ -7,13 +7,13 @@
 
 import Foundation
 
-public extension UInt16
+public extension UInt32
 {
-	func fm_setBit(_ position: UInt8) -> UInt16 {
+	func fm_setBit(_ position: UInt8) -> UInt32 {
 		return self | 1 << position
 	}
 	
-	func fm_clearBit(_ position: UInt8) -> UInt16 {
+	func fm_clearBit(_ position: UInt8) -> UInt32 {
 		return self & ~(1 << position)
 	}
 	
