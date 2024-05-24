@@ -5,7 +5,8 @@
 //  Created by Farhad Malekpour on 4/12/24.
 //
 
-#if canImport(WatchKit)
+//#if canImport(WatchKit)
+#if os(watchOS)
 
 import Foundation
 import WatchKit
