@@ -5,13 +5,12 @@
 //  Created by Farhad Malekpour on 4/12/24.
 //
 
-//#if canImport(WatchKit)
 #if os(watchOS)
 
 import Foundation
 import WatchKit
 
-enum FMWatchType: UInt {
+public enum FMWatchType: UInt {
 	case type38mm
 	case type42mm
 	case type40mm
@@ -21,9 +20,9 @@ enum FMWatchType: UInt {
 
 }
 
-class FMWatch
+public class FMWatch
 {
-	static func getType() -> FMWatchType
+	static public func getType() -> FMWatchType
 	{
 		let w: CGFloat = WKInterfaceDevice.current().screenBounds.width
 		
