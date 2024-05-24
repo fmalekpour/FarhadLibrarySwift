@@ -15,6 +15,8 @@ import Foundation
 #warning("Build for tvOS")
 #elseif os(macOS)
 #warning("Build for macOS")
+#else
+#warning("Build for unknown OS")
 #endif
 
 
