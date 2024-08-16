@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CryptoKit
 
 public extension Data
 {
@@ -58,5 +59,10 @@ public extension Data
 		return nil
 	}
 	
+	@available(iOS 14.0, *)
+	func fmMD5() -> String {
+		Insecure.MD5.hash(data: self).map { String(format: "%02hhx", $0) }.joined()
+	}
+
 }
 
