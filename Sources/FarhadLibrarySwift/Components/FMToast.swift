@@ -51,11 +51,11 @@ struct FMToastView<T: View>
 
 public struct FMToastConfig
 {
-	enum Position {
+	public enum Position {
 		case Top
 		case Bottom
 		case Center
-		var toAlignment: Alignment {
+		public var toAlignment: Alignment {
 			switch self {
 				case .Top:		return .top
 				case .Bottom:	return .bottom
@@ -63,13 +63,13 @@ public struct FMToastConfig
 			}
 		}
 	}
-	var deactivationDelay: TimeInterval = 3.0
-	var tapToDismiss: Bool = true
-	var textFont: Font = .body
-	var position: Position = .Top
-	var verticalOffset: CGFloat = 20.0
-	var textColor: Color = .primary
-	var imageColor: Color = .primary
+	public var deactivationDelay: TimeInterval = 3.0
+	public var tapToDismiss: Bool = true
+	public var textFont: Font = .body
+	public var position: Position = .Top
+	public var verticalOffset: CGFloat = 20.0
+	public var textColor: Color = .primary
+	public var imageColor: Color = .primary
 	
 }
 
