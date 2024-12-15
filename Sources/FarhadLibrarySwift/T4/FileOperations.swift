@@ -282,7 +282,6 @@ public extension URL
 	@available(iOS 16.0, *)
 	func FILE_SUGGEST_NAME_FOR_COPY() -> URL?
 	{
-		//print("------------------------")
 		guard self.isFileURL else { return nil }
 		var fileName = self.deletingPathExtension().lastPathComponent
 		
@@ -306,7 +305,6 @@ public extension URL
 				break
 			}
 		}
-		//		print("Result: \(String(describing: rv?.path(percentEncoded: false)))")
 		return rv
 	}
 	
