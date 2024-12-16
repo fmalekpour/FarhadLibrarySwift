@@ -47,7 +47,7 @@ public extension T4
 			}
 		}
 		
-		public func getLogs() -> [String]
+		public static func getLogs() -> [String]
 		{
 			UserDefaults.standard.stringArray(forKey: "T4LOGS") ?? []
 		}
