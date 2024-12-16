@@ -24,7 +24,7 @@ public struct FMMultipartFormData: Hashable, Equatable {
 					return
 				}
 				
-				self.data = value.data(using: .utf8, allowLossyConversion: true)!
+				self.data = value.data(using: .utf8, allowLossyConversion: true) ?? Data()
 			}
 		}
 		
@@ -36,7 +36,7 @@ public struct FMMultipartFormData: Hashable, Equatable {
 		}
 		
 		public init(name: String, value: String) {
-			let data = value.data(using: .utf8, allowLossyConversion: true)!
+			let data = value.data(using: .utf8, allowLossyConversion: true) ?? Data()
 			self.init(name: name, data: data, filename: nil, contentType: nil)
 		}
 	}
@@ -81,6 +81,21 @@ public struct FMMultipartFormData: Hashable, Equatable {
 		self.multipartType = multipartType
 	}
 	
+	public mutating func append(part: Part)
+	{
+		self.parts.append(part)
+	}
+	
+	public mutating func append(name: String, value: String)
+	{
+		self.parts.append(Part(name: name, value: value))
+	}
+	
+	public mutating func append(name: String, data: Data, filename: String? = nil, contentType: String? = nil)
+	{
+		self.parts.append(Part(name: name, data: data, filename: filename, contentType: contentType))
+	}
+	
 	public subscript(name: String) -> Part? {
 		get {
 			return self.parts.first(where: { $0.name == name })
@@ -101,6 +116,9 @@ public struct FMMultipartFormData: Hashable, Equatable {
 
 private extension Data {
 	mutating func fappend(_ string: String) {
-		self.append(string.data(using: .utf8, allowLossyConversion: true)!)
+		if let std = string.data(using: .utf8, allowLossyConversion: true)
+		{
+			self.append(std)
+		}
 	}
 }
