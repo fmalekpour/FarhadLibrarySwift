@@ -16,9 +16,9 @@ public extension T4
 	{
 		static let shared = T4.Log()
 		private let mLogsDateFormatter: DateFormatter = DateFormatter()
-		private var mBuffer: [String] = []
 		private init() {
 			self.mLogsDateFormatter.dateFormat = "dd-hh:mm:ss.SSS"
+			UserDefaults.standard.register(defaults: ["T4LOGS-MAXLINES": 100])
 		}
 		
 		
@@ -43,13 +43,19 @@ public extension T4
 				print(st, separator: "", terminator: "")
 				var cr: [String] = UserDefaults.standard.stringArray(forKey: "T4LOGS") ?? []
 				cr.append(st)
-				UserDefaults.standard.set(Array(cr.suffix(100)), forKey: "T4LOGS")
+				let maxLines = UserDefaults.standard.integer(forKey: "T4LOGS-MAXLINES")
+				UserDefaults.standard.set(Array(cr.suffix(maxLines)), forKey: "T4LOGS")
 			}
 		}
 		
 		public static func getLogs() -> [String]
 		{
 			UserDefaults.standard.stringArray(forKey: "T4LOGS") ?? []
+		}
+		
+		public static func setLogLinesCount(_ maxLines: Int)
+		{
+			UserDefaults.standard.set(maxLines, forKey: "T4LOGS-MAXLINES")
 		}
 	}
 }
