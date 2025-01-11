@@ -47,5 +47,10 @@ public extension String
 	func fmMD5() -> String {
 		Insecure.MD5.hash(data: self.data(using: .utf8)!).map { String(format: "%02hhx", $0) }.joined()
 	}
+	
+	func fmSHA256() -> String {
+		Data(utf8).fmSHA256()
+	}
+
 
 }
