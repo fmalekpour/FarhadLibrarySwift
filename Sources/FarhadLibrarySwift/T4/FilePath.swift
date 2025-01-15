@@ -48,21 +48,47 @@ public extension T4
 		return nil
 	}
 
-	
+#if os(macOS)
 	static func DOCUMENTS_URL(_ path: String) -> URL?
 	{
 		T4.Path2Url(T4.DOCUMENTS_PATH(path))
 	}
-	
+#else
+	@available(tvOS 16.0, *)
+	@available(iOS 16.0, *)
+	static func DOCUMENTS_URL(_ path: String) -> URL
+	{
+		URL.documentsDirectory
+	}
+#endif
+
+#if os(macOS)
 	static func LIBRARY_URL(_ path: String) -> URL?
 	{
 		T4.Path2Url(T4.LIBRARY_PATH(path))
 	}
-	
+#else
+	@available(tvOS 16.0, *)
+	@available(iOS 16.0, *)
+	static func LIBRARY_URL(_ path: String) -> URL
+	{
+		URL.libraryDirectory
+	}
+#endif
+
+#if os(macOS)
 	static func CACHES_URL(_ path: String) -> URL?
 	{
 		T4.Path2Url(T4.CACHES_PATH(path))
 	}
+#else
+	@available(tvOS 16.0, *)
+	@available(iOS 16.0, *)
+	static func CACHES_URL(_ path: String) -> URL
+	{
+		URL.cachesDirectory
+	}
+#endif
 	
 	static func BUNDLE_URL(_ path: String) -> URL?
 	{
