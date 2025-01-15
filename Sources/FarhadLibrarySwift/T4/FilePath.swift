@@ -58,7 +58,7 @@ public extension T4
 	@available(iOS 16.0, *)
 	static func DOCUMENTS_URL(_ path: String) -> URL
 	{
-		URL.documentsDirectory
+		URL.documentsDirectory.appending(path: path)
 	}
 #endif
 
@@ -72,7 +72,7 @@ public extension T4
 	@available(iOS 16.0, *)
 	static func LIBRARY_URL(_ path: String) -> URL
 	{
-		URL.libraryDirectory
+		URL.libraryDirectory.appending(path: path)
 	}
 #endif
 
@@ -86,7 +86,7 @@ public extension T4
 	@available(iOS 16.0, *)
 	static func CACHES_URL(_ path: String) -> URL
 	{
-		URL.cachesDirectory
+		URL.cachesDirectory.appending(path: path)
 	}
 #endif
 	
