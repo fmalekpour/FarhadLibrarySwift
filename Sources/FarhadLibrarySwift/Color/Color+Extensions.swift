@@ -13,17 +13,17 @@ public extension Color
 	static var faRandom: Color { Color(red: .random(in: 0...1), green: .random(in: 0...1), blue: .random(in: 0...1)) }
 	
 	struct ColorComponentsRGBA {
-		var red: CGFloat
-		var green: CGFloat
-		var blue: CGFloat
-		var alpha: CGFloat
+		public var red: CGFloat
+		public var green: CGFloat
+		public var blue: CGFloat
+		public var alpha: CGFloat
 	}
 	
 	struct ColorComponentsHSBA {
-		var hue: CGFloat
-		var saturation: CGFloat
-		var brightness: CGFloat
-		var alpha: CGFloat
+		public var hue: CGFloat
+		public var saturation: CGFloat
+		public var brightness: CGFloat
+		public var alpha: CGFloat
 	}
 	
 	@available(tvOS 14.0, *)
