@@ -20,9 +20,9 @@ public extension Color
 	}
 	
 	struct ColorComponentsHSBA {
-		var red: CGFloat
-		var green: CGFloat
-		var blue: CGFloat
+		var hue: CGFloat
+		var saturation: CGFloat
+		var brightness: CGFloat
 		var alpha: CGFloat
 	}
 	
@@ -61,7 +61,7 @@ public extension Color
 		UIColor(self).getHue(&h, saturation: &s, brightness: &b, alpha: &a)
 #endif
 		
-		return ColorComponentsHSBA(red: h, green: s, blue: b, alpha: a)
+		return ColorComponentsHSBA(hue: h, saturation: s, brightness: b, alpha: a)
 	}
 	
 
