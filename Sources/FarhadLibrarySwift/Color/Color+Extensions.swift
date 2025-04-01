@@ -12,17 +12,24 @@ public extension Color
 {
 	static var faRandom: Color { Color(red: .random(in: 0...1), green: .random(in: 0...1), blue: .random(in: 0...1)) }
 	
-	struct ColorComponents {
+	struct ColorComponentsRGBA {
 		var red: CGFloat
 		var green: CGFloat
 		var blue: CGFloat
 		var alpha: CGFloat
 	}
-
+	
+	struct ColorComponentsHSBA {
+		var red: CGFloat
+		var green: CGFloat
+		var blue: CGFloat
+		var alpha: CGFloat
+	}
+	
 	@available(tvOS 14.0, *)
 	@available(macOS 13.0, *)
 	@available(iOS 16.0, *)
-	func fmColorComponents() -> ColorComponents
+	func fmColorComponentsRGBA() -> ColorComponentsRGBA
 	{
 		var r: CGFloat = 0
 		var g: CGFloat = 0
@@ -30,16 +37,45 @@ public extension Color
 		var a: CGFloat = 0
 		
 #if os(macOS)
-//		NSColor(self).getRed(&r, green: &g, blue: &b, alpha: &a)
-		
 		NSColor(self).usingColorSpace(.sRGB)?.getRed(&r, green: &g, blue: &b, alpha: &a)
 #else
 		UIColor(self).getRed(&r, green: &g, blue: &b, alpha: &a)
 #endif
 
-		return ColorComponents(red: r, green: g, blue: b, alpha: a)
+		return ColorComponentsRGBA(red: r, green: g, blue: b, alpha: a)
 	}
 
+	@available(tvOS 14.0, *)
+	@available(macOS 13.0, *)
+	@available(iOS 16.0, *)
+	func fmColorComponentsHSBA() -> ColorComponentsHSBA
+	{
+		var h: CGFloat = 0
+		var s: CGFloat = 0
+		var b: CGFloat = 0
+		var a: CGFloat = 0
+		
+#if os(macOS)
+		NSColor(self).usingColorSpace(.sRGB)?.getHue(&h, saturation: &s, brightness: &b, alpha: &a)
+#else
+		UIColor(self).getHue(&h, saturation: &s, brightness: &b, alpha: &a)
+#endif
+		
+		return ColorComponentsHSBA(red: h, green: s, blue: b, alpha: a)
+	}
+	
+
+	
+	
+	
+	@available(tvOS 14.0, *)
+	@available(macOS 13.0, *)
+	@available(iOS 16.0, *)
+	@available(*, deprecated, message: "Use fmColorComponentsRGBA()")
+	func fmColorComponents() -> ColorComponentsRGBA
+	{
+		self.fmColorComponentsRGBA()
+	}
 	
 }
 
