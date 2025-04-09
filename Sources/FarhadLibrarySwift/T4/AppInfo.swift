@@ -54,4 +54,13 @@ public extension T4 {
 		return uid
 		
 	}
+	
+	static var IS_PREVIEW: Bool {
+		get{
+			ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1"
+		}
+	}
+
+	
+	
 }
