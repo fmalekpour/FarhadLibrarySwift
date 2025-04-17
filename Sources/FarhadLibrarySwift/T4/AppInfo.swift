@@ -61,6 +61,14 @@ public extension T4 {
 		}
 	}
 
+	static var IS_SIMULATOR: Bool {
+#if targetEnvironment(simulator)
+		return true
+#else
+		return false
+#endif
+	}
+
 	
 	
 }
