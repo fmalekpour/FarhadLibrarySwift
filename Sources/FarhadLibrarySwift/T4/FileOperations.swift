@@ -244,6 +244,7 @@ public extension URL
 		return rv
 	}
 	
+	@discardableResult
 	func FILE_COPY(_ targetUrl: URL) -> Bool {
 		guard self.isFileURL else { return false }
 		
@@ -260,6 +261,7 @@ public extension URL
 		return false
 	}
 	
+	@discardableResult
 	func FILE_MOVE(_ targetUrl: URL) -> Bool {
 		guard self.isFileURL else { return false }
 		
