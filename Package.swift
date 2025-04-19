@@ -7,7 +7,7 @@ let package = Package(
     name: "FarhadLibrarySwift",
 	platforms: [
 		.iOS(.v13),         
-		.macOS(.v10_15),
+		.macOS(.v14),
 		.tvOS(.v13),
 		.watchOS(.v10),
 	],

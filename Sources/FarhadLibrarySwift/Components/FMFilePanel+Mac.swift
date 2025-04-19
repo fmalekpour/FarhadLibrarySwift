@@ -29,7 +29,7 @@ private struct FMFilePanel: ViewModifier
 	
 	func body(content: Content) -> some View {
 		content
-			.onChange(of: isPresented) { newValue in
+			.onChange(of: isPresented) { oldValue, newValue in
 				if newValue
 				{
 					presentDialog()

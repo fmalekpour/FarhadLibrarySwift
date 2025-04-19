@@ -7,7 +7,7 @@
 
 import Foundation
 
-extension CGSize: RawRepresentable
+extension CGSize: @retroactive RawRepresentable
 {
 	public init?(rawValue: String) {
 		let parts = rawValue.replacingOccurrences(of: "{", with: "").replacingOccurrences(of: "}", with: "").split(separator: ",")

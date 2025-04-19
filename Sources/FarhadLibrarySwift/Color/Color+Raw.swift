@@ -11,7 +11,7 @@ import SwiftUI
 @available(tvOS 16.0, *)
 @available(macOS 13.0, *)
 @available(iOS 16.0, *)
-extension Color : RawRepresentable
+extension Color : @retroactive RawRepresentable
 {
 	
 	private static var PTB_32: Double = 1431655765.0  // 0x55555555
@@ -91,7 +91,7 @@ extension Color : RawRepresentable
 	
 	/// Raw value in 6 digit hex format
 	public var rawValue6: String{
-		let components = self.fmColorComponents()
+		let components = self.fmColorComponentsRGBA()
 		
 		let value = "#\(cm(components.red))\(cm(components.green))\(cm(components.blue))"
 		return value
@@ -104,7 +104,7 @@ extension Color : RawRepresentable
 	
 	/// Raw value in 8 digit hex format
 	public var rawValue8: String{
-		let components = self.fmColorComponents()
+		let components = self.fmColorComponentsRGBA()
 		
 		let value = "#\(cm(components.red))\(cm(components.green))\(cm(components.blue))\(cm(components.alpha))"
 		return value
@@ -117,7 +117,7 @@ extension Color : RawRepresentable
 	
 	/// Raw value in 16 digit hex format
 	public var rawValue16: String{
-		let components = self.fmColorComponents()
+		let components = self.fmColorComponentsRGBA()
 		
 		let value = "@\(cm(components.red))\(cm(components.green))\(cm(components.blue))\(cm(components.alpha))"
 		return value
@@ -130,7 +130,7 @@ extension Color : RawRepresentable
 	
 	/// Raw value in 32 digit hex format
 	public var rawValue32: String{
-		let components = self.fmColorComponents()
+		let components = self.fmColorComponentsRGBA()
 		
 		let value = "@\(cm(components.red))\(cm(components.green))\(cm(components.blue))\(cm(components.alpha))"
 		return value
