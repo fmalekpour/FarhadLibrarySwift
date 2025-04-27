@@ -32,14 +32,6 @@ extension Color : @retroactive RawRepresentable
 			g = PT32(String(rw[8..<16]))
 			b = PT32(String(rw[16..<24]))
 			a = PT32(String(rw[24..<32]))
-
-			/*
-			self = Color(.sRGB,
-						 red: PT32(String(rw[0..<8])),
-						 green: PT32(String(rw[8..<16])),
-						 blue: PT32(String(rw[16..<24])),
-						 opacity: PT32(String(rw[24..<32])))
-			*/
 		}
 		else if rw.count == 16
 		{
@@ -47,14 +39,6 @@ extension Color : @retroactive RawRepresentable
 			g = PT16(String(rw[4..<8]))
 			b = PT16(String(rw[8..<12]))
 			a = PT16(String(rw[12..<16]))
-			/*
-
-			self = Color(.sRGB,
-						 red: PT16(String(rw[0..<4])),
-						 green: PT16(String(rw[4..<8])),
-						 blue: PT16(String(rw[8..<12])),
-						 opacity: PT16(String(rw[12..<16])))
-			 */
 		}
 		else if rw.count == 12
 		{
@@ -62,15 +46,6 @@ extension Color : @retroactive RawRepresentable
 			g = PT16(String(rw[4..<8]))
 			b = PT16(String(rw[8..<12]))
 			a = 1.0
-			/*
-
-			
-			self = Color(.sRGB,
-						 red: PT16(String(rw[0..<4])),
-						 green: PT16(String(rw[4..<8])),
-						 blue: PT16(String(rw[8..<12])),
-						 opacity: 1.0)
-			 */
 		}
 		else if rw.count == 8
 		{
@@ -78,20 +53,6 @@ extension Color : @retroactive RawRepresentable
 			g = PT8(String(rw[2..<4]))
 			b = PT8(String(rw[4..<6]))
 			a = PT8(String(rw[6..<8]))
-/*
-#if os(macOS)
-			self = Color(NSColor(red: PT8(String(rw[0..<2])),
-								 green: PT8(String(rw[2..<4])),
-								 blue: PT8(String(rw[4..<6])),
-								 alpha: PT8(String(rw[6..<8]))))
-
-#else
-			self = Color(UIColor(red: PT8(String(rw[0..<2])),
-								 green: PT8(String(rw[2..<4])),
-								 blue: PT8(String(rw[4..<6])),
-								 alpha: PT8(String(rw[6..<8]))))
-#endif
- */
 		}
 		else if rw.count == 6
 		{
@@ -99,20 +60,6 @@ extension Color : @retroactive RawRepresentable
 			g = PT8(String(rw[2..<4]))
 			b = PT8(String(rw[4..<6]))
 			a = 1.0
-/*
-#if os(macOS)
-			self = Color(NSColor(red: PT8(String(rw[0..<2])),
-								 green: PT8(String(rw[2..<4])),
-								 blue: PT8(String(rw[4..<6])),
-								 alpha: 1.0))
-			
-#else
-			self = Color(UIColor(red: PT8(String(rw[0..<2])),
-								 green: PT8(String(rw[2..<4])),
-								 blue: PT8(String(rw[4..<6])),
-								 alpha: 1.0))
-#endif
- */
 		}
 		else
 		{
@@ -160,7 +107,7 @@ extension Color : @retroactive RawRepresentable
 		
 		func cm(_ v: CGFloat) -> String
 		{
-			String(format: "%0.2X", UInt8(T4.CAP(v, minimum: 0, maximum: 1)*Self.PTB_8))
+			String(format: "%0.2X", UInt8(T4.CAP(v, minimum: 0.0, maximum: 1.0)*Self.PTB_8))
 		}
 	}
 	
@@ -173,7 +120,7 @@ extension Color : @retroactive RawRepresentable
 		
 		func cm(_ v: CGFloat) -> String
 		{
-			String(format: "%0.2X", UInt8(T4.CAP(v, minimum: 0, maximum: 1)*Self.PTB_8))
+			String(format: "%0.2X", UInt8(T4.CAP(v, minimum: 0.0, maximum: 1.0)*Self.PTB_8))
 		}
 	}
 	
