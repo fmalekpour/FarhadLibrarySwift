@@ -9,6 +9,7 @@
 import Foundation
 import SwiftUI
 
+@available(tvOS 16.0, *)
 @available(macOS 13.0, *)
 @available(iOS 16.0, *)
 fileprivate struct HStackEqualHeight_Layout: Layout
@@ -73,6 +74,7 @@ fileprivate struct HStackEqualHeight_Layout: Layout
 	}
 }
 
+@available(tvOS 16.0, *)
 @available(macOS 13.0, *)
 @available(iOS 16.0, *)
 public struct HStackEqualHeight<C: View>: View

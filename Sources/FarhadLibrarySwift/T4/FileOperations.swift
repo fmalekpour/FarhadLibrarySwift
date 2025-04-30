@@ -229,6 +229,7 @@ public extension URL
 	}
 	
 	@available(watchOS, unavailable)
+	@available(tvOS, unavailable)
 	@discardableResult
 	func FILE_TRASH() -> Bool
 	{
