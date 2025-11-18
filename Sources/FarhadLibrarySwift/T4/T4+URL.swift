@@ -185,7 +185,7 @@ public extension URL
 	@available(iOS 16.0, *)
 	func DIRECTORY_FILE_LIST(propertiesKeys: [URLResourceKey]? = nil, options: FileManager.DirectoryEnumerationOptions? = nil) throws -> [URL]
 	{
-		let propertiesKeys = propertiesKeys ?? [.fileSizeKey, .fileContentIdentifierKey, .creationDateKey, .contentModificationDateKey]
+		let propertiesKeys = propertiesKeys ?? [.isDirectoryKey, .fileSizeKey, .fileContentIdentifierKey, .creationDateKey, .contentModificationDateKey]
 		let options = options ?? []
 		
 		guard self.isFileURL else {
