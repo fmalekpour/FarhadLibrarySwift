@@ -189,16 +189,16 @@ public extension URL
 		let options = options ?? []
 		
 		guard self.isFileURL else {
-			throw FMError(message: "URL is not a file URL")
+			throw FMError(code: 1011, message: "URL is not a file URL", category: 10)
 		}
 		guard self.FILE_IS_DIRECTORY else {
-			throw FMError(message: "URL is not a directory")
+			throw FMError(code: 1012, message: "URL is not a directory", category: 10)
 		}
 		var rv: [URL] = []
 		do {
 			rv = try FileManager.default.contentsOfDirectory(at: self, includingPropertiesForKeys: propertiesKeys, options: options)
 		} catch {
-			throw FMError(message: "Failed to list directory contents", error: error)
+			throw FMError(code: 1013, message: "Failed to list directory contents", category: 10, error: error)
 		}
 		return rv
 	}
