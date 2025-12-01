@@ -79,17 +79,17 @@ public struct FMSegmentControl<SelectionValue: Hashable, Content: View>: View {
 @available(tvOS 17.0, *)
 public struct FMSegmentControlConfig
 {
-	var backgroundCornerRadius: CGFloat = 8
-	var selectedBackgroundCornerRadius: CGFloat = 6
-	var selectedBackground: () -> AnyView = {
+	public var backgroundCornerRadius: CGFloat = 8
+	public var selectedBackgroundCornerRadius: CGFloat = 6
+	public var selectedBackground: () -> AnyView = {
 		AnyView(SegmentDefaultSelectedBackground())
 	}
 	
-	var buttonStyle: ((_ isSelected: Bool, _ isEnabled: Bool, _ colorScheme: ColorScheme) ->  AnyButtonStyle) = { isSelected, isEnabled, colorScheme in
+	public var buttonStyle: ((_ isSelected: Bool, _ isEnabled: Bool, _ colorScheme: ColorScheme) ->  AnyButtonStyle) = { isSelected, isEnabled, colorScheme in
 		AnyButtonStyle(SegmentDefaultButtonStyle(isSelected: isSelected, isEnabled: isEnabled, colorScheme: colorScheme))
 	}
 	
-	var background: () -> AnyViewModifierApplier = {
+	public var background: () -> AnyViewModifierApplier = {
 		AnyViewModifierApplier(SegmentDefaultModifier())
 	}
 }
