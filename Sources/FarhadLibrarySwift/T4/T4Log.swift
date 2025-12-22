@@ -76,3 +76,12 @@ public func T4Log(_ items: Any...)
 {
 	T4.Log.printv(items)
 }
+
+
+@available(iOS 16.0, *)
+nonisolated public func fmPrint(_ message: any StringProtocol) {
+	var threadId: UInt64 = 0
+	pthread_threadid_np(nil, &threadId)
+	let label = String(cString: __dispatch_queue_get_label(nil))
+	Swift.print("[\(Date().ISO8601Format(.iso8601(timeZone: .current, includingFractionalSeconds: true)))][thread \(threadId)][queue \(label)] \(message)")
+}
