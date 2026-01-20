@@ -44,5 +44,34 @@ public extension Int64
 		}
 	}
 
+	enum SizeStringMode{
+		case auto
+		case GB
+		case MB
+		case KB
+	}
+	
+	func sizeString(mode: SizeStringMode = .auto) -> String
+	{
+		let size = self
+		switch mode {
+			case .auto:
+				if size<1024
+				{ return String(format: "%lldB",size) }
+				else if size<1024*1024
+				{ return String(format: "%.2fKB",(Double(size)/1024.0)) }
+				else if size<1024*1024*1024
+				{ return String(format: "%.2fMB",(Double(size)/1024.0/1024.0)) }
+				else
+				{ return String(format: "%.2fGB",(Double(size)/1024.0/1024.0/1024.0)) }
+			case .GB:
+				return String(format: "%.2fGB",(Double(size)/1024.0/1024.0/1024.0))
+			case .MB:
+				return String(format: "%.2fMB",(Double(size)/1024.0/1024.0))
+			case .KB:
+				return String(format: "%.2fKB",(Double(size)/1024.0))
+		}
+	}
+
 	
 }
