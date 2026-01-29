@@ -14,10 +14,10 @@ import Combine
 
 @available(iOS 26.0, *)
 @available(tvOS 26.0, *)
-final class FMWaitView {
-	static let shared = FMWaitView()
+final public class FMWaitView {
+	static public let shared = FMWaitView()
 	
-	enum WaitType{
+	public enum WaitType{
 		case basic
 		case progress
 		case dialog
@@ -25,7 +25,7 @@ final class FMWaitView {
 	
 	
 	
-	class Info: ObservableObject {
+	fileprivate class Info: ObservableObject {
 		@Published var mWaitType: WaitType = .basic
 		@Published var mTitle: String = "Please wait…"
 		@Published var mMessage: String? = nil
@@ -34,12 +34,12 @@ final class FMWaitView {
 	}
 	
 	
-	struct ButtonInfo: Identifiable
+	public struct ButtonInfo: Identifiable
 	{
-		var id: String = UUID().uuidString
-		var mRole: ButtonRole? = nil
-		var mTitle: String
-		var mAction: () -> Void
+		public var id: String = UUID().uuidString
+		public var mRole: ButtonRole? = nil
+		public var mTitle: String
+		public var mAction: () -> Void
 	}
 	
 	private var mInfo: Info = Info()
@@ -49,7 +49,7 @@ final class FMWaitView {
 	
 	private init() {}
 	
-	func show(title: String = "Please wait…", message: String? = nil, type: WaitType = .basic, buttons: [ButtonInfo] = [])
+	public func show(title: String = "Please wait…", message: String? = nil, type: WaitType = .basic, buttons: [ButtonInfo] = [])
 	{
 
 		guard let scene = UIApplication.shared.connectedScenes
@@ -83,31 +83,31 @@ final class FMWaitView {
 		window?.isHidden = false
 	}
 	
-	func hide() {
+	public func hide() {
 		window?.isHidden = true
 	}
 	
-	func setType(_ WaitType: WaitType) {
+	public func setType(_ WaitType: WaitType) {
 		mInfo.mWaitType = WaitType
 	}
 	
-	func setTitle(_ title: String) {
+	public func setTitle(_ title: String) {
 		mInfo.mTitle = title
 	}
 	
-	func setMessage(_ message: String?) {
+	public func setMessage(_ message: String?) {
 		mInfo.mMessage = message
 	}
 	
-	func setProgress(_ progress: Progress) {
+	public func setProgress(_ progress: Progress) {
 		mInfo.mProgress = progress
 	}
 	
-	func setButtons(_ buttons: [ButtonInfo]) {
+	public func setButtons(_ buttons: [ButtonInfo]) {
 		mInfo.mButtons = buttons
 	}
 	
-	func addButton(_ button: ButtonInfo) {
+	public func addButton(_ button: ButtonInfo) {
 		mInfo.mButtons.append(button)
 	}
 	
