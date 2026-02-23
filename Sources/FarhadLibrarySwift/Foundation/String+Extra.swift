@@ -9,11 +9,17 @@ import Foundation
 
 public extension String
 {
-	init(randomLength: Int, allowdCharacters: String = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
+	init(randomLength: Int, allowedCharacters: String = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
 	{
-		let s = "\(allowdCharacters)\(allowdCharacters)\(allowdCharacters)\(allowdCharacters)\(allowdCharacters)"
+		guard allowedCharacters.count > 0 else {
+			self.init("")
+			return
+		}
+		
+		let s = String(repeating: allowedCharacters, count: (randomLength * 4 ) / allowedCharacters.count )
 			.shuffled()
 			.prefix(randomLength)
+
 		
 		self.init(s)
 	}
