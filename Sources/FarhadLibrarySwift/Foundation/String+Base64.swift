@@ -51,6 +51,10 @@ public extension String
 	func fmSHA256() -> String {
 		Data(utf8).fmSHA256()
 	}
-
+	
+	func fmSHA512() -> String {
+		Data(utf8).fmSHA512()
+	}
+	
 
 }
