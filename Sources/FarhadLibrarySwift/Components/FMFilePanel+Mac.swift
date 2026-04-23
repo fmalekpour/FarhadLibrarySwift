@@ -32,13 +32,16 @@ private struct FMFilePanel: ViewModifier
 			.onChange(of: isPresented) { oldValue, newValue in
 				if newValue
 				{
-					presentDialog()
+					Task{
+						presentDialog()
+					}
 				}
 			}
 		
 		
 	}
 	
+	@MainActor
 	func presentDialog() {
 		var conf = configurationDefault
 		if let configBlock = configurationBlock
