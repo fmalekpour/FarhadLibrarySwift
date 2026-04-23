@@ -68,5 +68,9 @@ public extension Data
 		SHA256.hash(data: self).map { String(format: "%02hhx", $0) }.joined()
 	}
 	
+	func fmSHA512() -> String {
+		SHA512.hash(data: self).map { String(format: "%02hhx", $0) }.joined()
+	}
+	
 }
 
