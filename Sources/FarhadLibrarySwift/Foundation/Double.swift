@@ -17,11 +17,21 @@ public extension Double{
 	
 	func durationString(mode: DurationStringMode = .normal) -> String
 	{
+/*
 		let du = self
 		let hours = Int(du) / (60 * 60)
 		let minutes = (Int(du) % (60 * 60)) / 60
 		let seconds = ((Int(du) % (60 * 60)) % 60)
 		let milliSec: Int = min(Int(roundl((du - Double(Int(du))) * 100)), 99)
+*/
+		let totalCentiSeconds = Int((self * 100).rounded())
+		
+		let hours = totalCentiSeconds / 360_000
+		let minutes = (totalCentiSeconds % 360_000) / 6_000
+		let seconds = (totalCentiSeconds % 6_000) / 100
+		let milliSec = totalCentiSeconds % 100
+		
+		
 		switch mode {
 			case .auto: // auto
 				if hours > 0 {
