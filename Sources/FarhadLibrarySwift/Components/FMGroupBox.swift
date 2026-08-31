@@ -32,11 +32,15 @@ public struct FMGroupBox<TITLE, CONTENTS>: View where TITLE: View, CONTENTS: Vie
 	
 	public var body: some View {
 		VStack(alignment: .leading, spacing: 0) {
+			
 			mTitle()
 				.fmReportSize(initial: true) { size in
 					mTitleSize = size
 				}
 				.padding(.horizontal, 20)
+				.padding(.bottom, -8)
+
+			
 			mContents()
 				.padding()
 		}
@@ -52,6 +56,7 @@ public struct FMGroupBox<TITLE, CONTENTS>: View where TITLE: View, CONTENTS: Vie
 			}
 			.frame(maxWidth: .infinity, maxHeight: .infinity)
 			.id("ovr-\(mTitleSize.width)-\(mTitleSize.height)")
+			.allowsHitTesting(false)
 		}
 	}
 	
@@ -139,6 +144,38 @@ public extension FMGroupBox where TITLE == Text {
 	}
 }
 
+#Preview {
+	VStack(spacing: 16){
+		FMGroupBox("Hello"){
+			HStack{
+				Text("World")
+				Spacer()
+				Button {
+					
+				} label: {
+					Text("Test")
+				}
+			}
+		}
+		
+		FMGroupBox {
+			HStack{
+				Text("World")
+				Spacer()
+				Button {
+					
+				} label: {
+					Text("Test")
+				}
+			}
+		} label: {
+			Text("Custom Title")
+				.foregroundStyle(.indigo)
+		}
+		.borderColor(.pink)
 
+	}
+	.padding()
+}
 
 #endif
