@@ -11,10 +11,11 @@ import SwiftUI
 #if os(macOS)
 
 public struct FMGroupBox<TITLE, CONTENTS>: View where TITLE: View, CONTENTS: View {
-	@ViewBuilder var mTitle: () -> TITLE
-	@ViewBuilder var mContents: () -> CONTENTS
+	@ViewBuilder private var mTitle: () -> TITLE
+	@ViewBuilder private var mContents: () -> CONTENTS
 	
-	var mBorderColor: Color = Color(nsColor: NSColor.separatorColor)
+	private var mBorderColor: Color = Color(nsColor: NSColor.separatorColor)
+	private var mHasTitle: Bool = true
 	
 	
 	public init(@ViewBuilder _ contents: @escaping () -> CONTENTS, @ViewBuilder label: @escaping () -> TITLE) {
@@ -67,6 +68,11 @@ public struct FMGroupBox<TITLE, CONTENTS>: View where TITLE: View, CONTENTS: Vie
 		gapWidth: CGFloat = 30
 	) -> Path {
 		var path = Path()
+		
+		if self.mHasTitle == false {
+			path.addRoundedRect(in: rect, cornerSize: CGSize(width: radius, height: radius))
+			return path
+		}
 		
 		let r = min(radius, rect.width / 2, rect.height / 2)
 		
@@ -142,6 +148,13 @@ public extension FMGroupBox where TITLE == Text {
 				.foregroundColor(.primary)
 		}
 	}
+	init(@ViewBuilder _ contents: @escaping () -> CONTENTS) {
+		self.mContents = contents
+		self.mTitle = {
+			Text("")
+		}
+		self.mHasTitle = false
+	}
 }
 
 #Preview {
@@ -173,6 +186,19 @@ public extension FMGroupBox where TITLE == Text {
 				.foregroundStyle(.indigo)
 		}
 		.borderColor(.pink)
+
+		
+		FMGroupBox{
+			HStack{
+				Text("No Title")
+				Spacer()
+				Button {
+					
+				} label: {
+					Text("Test")
+				}
+			}
+		}
 
 	}
 	.padding()
