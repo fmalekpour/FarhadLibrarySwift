@@ -77,7 +77,7 @@ public extension UIImage {
 	/// in one dimension if the aspect ratios don't match (no cropping occurs).
 	/// - Parameter size: The bounding size to fit the image within.
 	/// - Returns: A new, aspect-fit scaled `UIImage`, or `nil` if the operation fails.
-	func scaleImage(toFit size: CGSize) -> UIImage? {
+	func scale(toFit size: CGSize) -> UIImage? {
 		let aspectWidth = size.width / self.size.width
 		let aspectHeight = size.height / self.size.height
 		let aspectRatio = min(aspectWidth, aspectHeight)
@@ -92,7 +92,7 @@ public extension UIImage {
 	/// cropped to exactly match `size` (any content extending beyond the bounds is clipped).
 	/// - Parameter size: The exact size the resulting image should fill.
 	/// - Returns: A new, aspect-fill scaled and cropped `UIImage`, or `nil` if the operation fails.
-	func scaleImage(toFill size: CGSize) -> UIImage? {
+	func scale(toFill size: CGSize) -> UIImage? {
 		let aspectWidth = size.width / self.size.width
 		let aspectHeight = size.height / self.size.height
 		let aspectRatio = max(aspectWidth, aspectHeight)
