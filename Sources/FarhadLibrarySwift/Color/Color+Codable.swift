@@ -12,7 +12,7 @@ import SwiftUI
 @available(tvOS 17.0, *)
 @available(macOS 14.0, *)
 @available(iOS 17.0, *)
-extension Color: Codable
+extension Color: @retroactive Codable
 {
 	private enum CodingKeys: String, CodingKey{
 		case mHex = "hex"

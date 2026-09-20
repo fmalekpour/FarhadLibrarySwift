@@ -50,6 +50,14 @@ public extension UIImage {
 	private func drawing(size: CGSize, drawRect: CGRect) -> UIImage? {
 		guard let cgImage = self.cgImage else { return nil }
 		
+		// `size`/`drawRect` are in points. The bitmap needs to be sized in pixels
+		// (points * scale), otherwise the resulting UIImage (tagged with `scale`)
+		// ends up reporting a point size that is `scale` times smaller than requested.
+		let scale = self.scale
+		let pixelWidth = Int((size.width * scale).rounded())
+		let pixelHeight = Int((size.height * scale).rounded())
+		guard pixelWidth > 0, pixelHeight > 0 else { return nil }
+		
 		let colorSpace = cgImage.colorSpace ?? CGColorSpaceCreateDeviceRGB()
 		let bitmapInfo = cgImage.bitmapInfo.rawValue != 0
 		? cgImage.bitmapInfo.rawValue
@@ -57,8 +65,8 @@ public extension UIImage {
 		
 		guard let context = CGContext(
 			data: nil,
-			width: Int(size.width.rounded()),
-			height: Int(size.height.rounded()),
+			width: pixelWidth,
+			height: pixelHeight,
 			bitsPerComponent: 8,
 			bytesPerRow: 0,
 			space: colorSpace,
@@ -66,12 +74,14 @@ public extension UIImage {
 		) else { return nil }
 		
 		context.interpolationQuality = .high
+		// Scale the context so drawing coordinates (drawRect) can stay in points.
+		context.scaleBy(x: scale, y: scale)
 		context.draw(cgImage, in: drawRect)
 		
 		guard let outputImage = context.makeImage() else { return nil }
-		return UIImage(cgImage: outputImage, scale: self.scale, orientation: .up)
+		return UIImage(cgImage: outputImage, scale: scale, orientation: .up)
 	}
-	
+
 	/// Scales the image to fit entirely within the given size while preserving its aspect ratio.
 	/// The resulting image will be no larger than `size` in either dimension, and may be smaller
 	/// in one dimension if the aspect ratios don't match (no cropping occurs).
