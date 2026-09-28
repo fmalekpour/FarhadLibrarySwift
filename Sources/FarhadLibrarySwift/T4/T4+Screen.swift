@@ -50,6 +50,27 @@ public extension T4
 		#endif
 	}
 
+#if os(iOS)
+	static var INTERFACE_ORIENTATION: UIInterfaceOrientation? {
+		guard let windowScene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene else {
+			return nil
+		}
+		return windowScene.interfaceOrientation
+	}
+	
+	static var IS_LANDSCAPE: Bool {
+		guard let orientation = INTERFACE_ORIENTATION else { return false }
+		return orientation.isLandscape
+	}
+	
+	static var IS_PORTRAIT: Bool {
+		guard let orientation = INTERFACE_ORIENTATION else { return true }
+		return orientation.isPortrait
+	}
+	
+	
+#endif
+
 	/*
 	#define L4A_SCALE_FACTOR				FMScreenScale()
 	#define L4A_SCALE_FACTOR_PHYSICAL		FMScreenPhysicalScale()
