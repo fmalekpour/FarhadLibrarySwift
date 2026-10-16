@@ -220,6 +220,7 @@ private struct ValuePickerOption<Content: View, Value: Hashable>: View {
 				}
 				.accessibilityElement(children: .combine)
 				.accessibilityAddTraits(isSelected ? .isSelected : [])
+				.contentShape(Rectangle())
 			}
 		)
 		.buttonStyle(config.buttonStyle(isSelected, isEnabled, colorScheme))
@@ -277,13 +278,36 @@ private struct PreviewContent: View {
 	
 	var body: some View {
 		NavigationStack {
-			List {
-				FMSegmentControl(selection: $selection) {
-					ForEach(["Jo", "Jean", "Juan"], id: \.self) { name in
-						Text(verbatim: name)
-							.pickerTag(name)
+			VStack{
+				List {
+					FMSegmentControl(selection: $selection) {
+						ForEach(["Jo", "Jean", "Juan"], id: \.self) { name in
+							Text(verbatim: name)
+								.pickerTag(name)
+						}
 					}
 				}
+				FMGroupBox {
+					FMSegmentControl(selection: $selection) {
+						ForEach(["Jo", "Jean", "Juan"], id: \.self) { name in
+							Text(verbatim: name)
+								.pickerTag(name)
+						}
+					}
+					.frame(maxWidth: .infinity)
+					.padding()
+				}
+				FMGroupBox {
+					FMSegmentControl(selection: $selection) {
+						ForEach(["Jo", "Jean", "Juan"], id: \.self) { name in
+							Text(verbatim: name)
+								.pickerTag(name)
+						}
+					}
+					.frame(maxWidth: 250)
+					.padding()
+				}
+
 			}
 			.navigationTitle("CPicker (\(selection))")
 		}

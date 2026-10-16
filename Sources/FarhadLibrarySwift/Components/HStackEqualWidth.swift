@@ -13,34 +13,52 @@ import SwiftUI
 @available(iOS 16.0, *)
 fileprivate struct HStackEqualWidth_Layout: Layout
 {
-	var spacing: CGFloat = .nan
+		var spacing: CGFloat = .nan
 	
-	func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
-		let maxSize = maxSize(subviews: subviews)
-		let spacing = spacing(subviews: subviews)
-		let totalSpacing = spacing.reduce(0.0, +)
-		
-		return CGSize(width: maxSize.width * CGFloat(subviews.count) + totalSpacing,
-					  height: maxSize.height)
-	}
-	
-	func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
-		let maxSize = maxSize(subviews: subviews)
-		let spacing = spacing(subviews: subviews)
-		
-		let sizeProposal = ProposedViewSize(width: maxSize.width,
-											height: maxSize.height)
-		
-		var x = bounds.minX + maxSize.width / 2
-		
-		for index in subviews.indices {
-			subviews[index].place(at: CGPoint(x: x, y: bounds.midY),
-								  anchor: .center,
-								  proposal: sizeProposal)
+		func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+			guard !subviews.isEmpty else { return .zero }
 			
-			x += maxSize.width + spacing[index]
+			let spacing = spacing(subviews: subviews)
+			let totalSpacing = spacing.reduce(0.0, +)
+			let idealSize = maxSize(subviews: subviews)
+			let idealWidth = idealSize.width * CGFloat(subviews.count) + totalSpacing
+			let width = finiteWidth(proposal.width) ?? idealWidth
+			let itemWidth = max(0.0, (width - totalSpacing) / CGFloat(subviews.count))
+			let height = maxHeight(subviews: subviews, width: itemWidth)
+			
+			return CGSize(width: width, height: height)
 		}
-	}
+		
+		func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
+			guard !subviews.isEmpty else { return }
+			
+			let spacing = spacing(subviews: subviews)
+			let totalSpacing = spacing.reduce(0.0, +)
+			let itemWidth = max(0.0, (bounds.width - totalSpacing) / CGFloat(subviews.count))
+			let itemHeight = maxHeight(subviews: subviews, width: itemWidth)
+			
+			let sizeProposal = ProposedViewSize(width: itemWidth, height: itemHeight)
+			
+			var x = bounds.minX + itemWidth / 2
+			
+			for index in subviews.indices {
+				subviews[index].place(at: CGPoint(x: x, y: bounds.midY),
+									  anchor: .center,
+									  proposal: sizeProposal)
+				
+				x += itemWidth + spacing[index]
+			}
+		}
+		
+		private func finiteWidth(_ width: CGFloat?) -> CGFloat? {
+			guard let width, width.isFinite else { return nil }
+			return max(0.0, width)
+		}
+		
+		private func maxHeight(subviews: Subviews, width: CGFloat) -> CGFloat {
+			let proposal = ProposedViewSize(width: width, height: nil)
+			return subviews.map { $0.sizeThatFits(proposal).height }.max() ?? 0.0
+		}
 	
 	private func maxSize(subviews: Subviews) -> CGSize {
 		
@@ -78,17 +96,17 @@ fileprivate struct HStackEqualWidth_Layout: Layout
 @available(iOS 16.0, *)
 public struct HStackEqualWidth<C: View>: View
 {
-	private var spacing: CGFloat
-	@ViewBuilder private var content: () -> C
-	
-	public init(spacing: CGFloat = .nan, @ViewBuilder content: @escaping () -> C) {
-		self.spacing = spacing
-		self.content = content
-	}
+		private var spacing: CGFloat
+		@ViewBuilder private var content: () -> C
+		
+		public init(spacing: CGFloat = .nan, @ViewBuilder content: @escaping () -> C) {
+			self.spacing = spacing
+			self.content = content
+		}
 
 	public var body: some View
 	{
-		HStackEqualWidth_Layout(spacing: self.spacing)
+			HStackEqualWidth_Layout(spacing: self.spacing)
 		{
 			content()
 		}
