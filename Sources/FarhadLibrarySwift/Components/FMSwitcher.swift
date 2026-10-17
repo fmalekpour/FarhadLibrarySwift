@@ -44,6 +44,7 @@ public struct FMSwitcher<Selection: Hashable>: View {
 					.opacity(0.0)
 			}
 		}
+		.frame(maxWidth: .infinity)
 		.padding(.vertical, 4)
 		.padding(.horizontal, 20)
 		.overlay(alignment: .leading, content: {
@@ -79,7 +80,7 @@ public struct FMSwitcher<Selection: Hashable>: View {
 					}
 					.padding(.leading, 5)
 					.frame(maxHeight: .infinity)
-					.opacity(selectedItem == items.first?.id ? 0.7 : 1.0)
+					.opacity(selectedItem == items.first?.id ? 0.5 : 1.0)
 					.grayscale(selectedItem == items.first?.id ? 1.0 : 0.0)
 				}
 				.disabled(selectedItem == items.first?.id)
@@ -99,7 +100,7 @@ public struct FMSwitcher<Selection: Hashable>: View {
 					}
 					.padding(.trailing, 5)
 					.frame(maxHeight: .infinity)
-					.opacity(selectedItem == items.last?.id ? 0.7 : 1.0)
+					.opacity(selectedItem == items.last?.id ? 0.5 : 1.0)
 					.grayscale(selectedItem == items.last?.id ? 1.0 : 0.0)
 				}
 				.disabled(selectedItem == items.last?.id)
@@ -107,6 +108,7 @@ public struct FMSwitcher<Selection: Hashable>: View {
 			}
 			.buttonStyle(.borderless)
 			.buttonRepeatBehavior(.enabled)
+			
 
 		})
 		.onChange(of: selectedItem, initial: true, { oldValue, newValue in
@@ -220,12 +222,26 @@ private struct FMSwitcherPreview: View {
 				FMSwitcherItem(id: 2, title: "Another Item 2"),
 				FMSwitcherItem(id: 3, title: "Item 385")
 			])
-			.foregroundStyle(.white, .green)
+			.frame(maxWidth: 200)
+			.foregroundStyle(.white)
 			.tint(.yellow)
 			.background {
 				RoundedRectangle(cornerRadius: 12)
 					.fill(Color.brown)
 			}
+			
+			FMSwitcher(selectedItem: $selectedItem, items: [
+				FMSwitcherItem(id: 1, title: "Item 1"),
+				FMSwitcherItem(id: 2, title: "Another Item 2"),
+				FMSwitcherItem(id: 3, title: "Item 385")
+			])
+			.foregroundStyle(.white)
+			.tint(.yellow)
+			.background {
+				RoundedRectangle(cornerRadius: 6)
+					.fill(Color.brown)
+			}
+			.padding(.horizontal)
 			
 			HStack{
 				FMSwitcher.BinarySwitcher(isOn: $isOn)
