@@ -8,24 +8,13 @@
 import SwiftUI
 
 @available(iOS 17.0, *)
-public struct FMSwitcher: View {
+public struct FMSwitcher<Selection: Hashable>: View {
 	
-	public init(selectedItem: Binding<AnyHashable>, items: [FMSwitcherItem]) {
+	public init(selectedItem: Binding<Selection>, items: [FMSwitcherItem<Selection>]) {
 		self._selectedItem = selectedItem
 		self.items = items
 	}
 	
-	public static func BinarySwitcher(isOn: Binding<Bool>, leftTitle: String = "Off", rightTitle: String = "On") -> FMSwitcher {
-		FMSwitcher(selectedItem: Binding(get: {
-			isOn.wrappedValue ? 1 : 0
-		}, set: { newValue in
-			isOn.wrappedValue = (newValue as? Int == 1)
-		}), items: [
-			FMSwitcherItem(id: 0, title: leftTitle),
-			FMSwitcherItem(id: 1, title: rightTitle)
-		])
-	}
-
 	public func setLeftImage(_ image: Image) -> Self {
 		let copy = self
 		copy.mImageLeft = image
@@ -39,8 +28,8 @@ public struct FMSwitcher: View {
 	}
 	
 	
-	@Binding private var selectedItem: AnyHashable
-	private var items: [FMSwitcherItem]
+	@Binding private var selectedItem: Selection
+	private var items: [FMSwitcherItem<Selection>]
 
 	@State private var mImageLeft: Image = Image(systemName: "chevron.left")
 	@State private var mImageRight: Image = Image(systemName: "chevron.right")
@@ -151,7 +140,7 @@ public struct FMSwitcher: View {
 		}
 	}
 	
-	private func moveToItem(_ item: FMSwitcherItem, animated: Bool = true)
+	private func moveToItem(_ item: FMSwitcherItem<Selection>, animated: Bool = true)
 	{
 		let index = items.firstIndex(of: item) ?? 0
 		if animated
@@ -167,21 +156,40 @@ public struct FMSwitcher: View {
 	}
 }
 
-public struct FMSwitcherItem: Hashable
+public struct FMSwitcherItem<ID: Hashable>: Hashable
 {
-	public var id: AnyHashable
+	public var id: ID
 	public var title: String
 	
-	public static func Item(id: AnyHashable, title: String) -> FMSwitcherItem
+	public init(id: ID, title: String) {
+		self.id = id
+		self.title = title
+	}
+	
+	public static func Item(id: ID, title: String) -> Self
 	{
 		FMSwitcherItem(id: id, title: title)
+	}
+}
+
+@available(iOS 17.0, *)
+public extension FMSwitcher where Selection == Bool {
+	static func BinarySwitcher(
+		isOn: Binding<Bool>,
+		leftTitle: String = "Off",
+		rightTitle: String = "On"
+	) -> Self {
+		FMSwitcher(selectedItem: isOn, items: [
+			FMSwitcherItem(id: false, title: leftTitle),
+			FMSwitcherItem(id: true, title: rightTitle)
+		])
 	}
 }
 
 
 @available(iOS 17.0, *)
 private struct FMSwitcherPreview: View {
-	@State var selectedItem: AnyHashable = 2
+	@State var selectedItem: Int = 2
 	@State var isOn: Bool = true
 	var body: some View {
 		
