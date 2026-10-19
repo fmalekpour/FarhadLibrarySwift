@@ -22,7 +22,7 @@ private struct _ButtonStyleBox<Base: ButtonStyle>: _AnyButtonStyleBox {
 public struct AnyButtonStyle: ButtonStyle {
 	private let box: _AnyButtonStyleBox
 	
-	init<S: ButtonStyle>(_ style: S) {
+	public init<S: ButtonStyle>(_ style: S) {
 		self.box = _ButtonStyleBox(base: style)
 	}
 	
