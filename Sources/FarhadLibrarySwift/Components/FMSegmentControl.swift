@@ -85,8 +85,12 @@ public struct FMSegmentControlConfig
 		AnyView(SegmentDefaultSelectedBackground())
 	}
 	
-	public var buttonStyle: ((_ isSelected: Bool, _ isEnabled: Bool, _ colorScheme: ColorScheme) ->  AnyButtonStyle) = { isSelected, isEnabled, colorScheme in
-		AnyButtonStyle(SegmentDefaultButtonStyle(isSelected: isSelected, isEnabled: isEnabled, colorScheme: colorScheme))
+	public var buttonStyle: ((_ isSelected: Bool, _ isEnabled: Bool, _ colorScheme: ColorScheme, _ index: Int, _ selectedIndex: Int?) ->  AnyButtonStyle) = { isSelected, isEnabled, colorScheme, index, selectedIndex in
+		AnyButtonStyle(SegmentDefaultButtonStyle(isSelected: isSelected,
+												 isEnabled: isEnabled,
+												 colorScheme: colorScheme,
+												 index: index,
+												 selectedIndex: selectedIndex))
 	}
 	
 	public var background: () -> AnyViewModifierApplier = {
@@ -101,6 +105,8 @@ private struct SegmentDefaultButtonStyle: ButtonStyle {
 	var isSelected: Bool
 	var isEnabled: Bool
 	var colorScheme: ColorScheme
+	var index: Int
+	var selectedIndex: Int?
 	//@Environment(\.colorScheme) var colorScheme
 
 	func makeBody(configuration: Configuration) -> some View {
@@ -157,18 +163,36 @@ private struct ValuePickerOptions<Value: Hashable>: _VariadicView.MultiViewRoot 
 	
 	@ViewBuilder
 	func body(children: _VariadicView.Children) -> some View {
-		ForEach(children) { child in
+		ForEach(children.indices, id: \.self) { index in
 			ValuePickerOption(
 				selectedValue: selectedValue,
-				value: child[CustomTagValueTraitKey<Value>.self],
+				value: children[index][CustomTagValueTraitKey<Value>.self],
+				index: index,
+				selectedIndex: selectedIndex(children: children),
 				cellPositions: cellPositions,
 				cellPositionsChanged: cellPositionsChanged,
 				config: config
 			) {
-				child
+				children[index]
+			}
+		}
+	}
+	func selectedIndex(children: _VariadicView.Children) -> Int?
+	{
+		for index in children.indices
+		{
+			let value = children[index][CustomTagValueTraitKey<Value>.self]
+			
+			if case .tagged(let tag) = value
+			{
+				if tag == selectedValue.wrappedValue
+				{
+					return index
+				}
 			}
 			
 		}
+		return nil
 	}
 }
 
@@ -179,6 +203,8 @@ private struct ValuePickerOption<Content: View, Value: Hashable>: View {
 	
 	private let selectedValue: Binding<Value>
 	private let value: Value?
+	private let index: Int
+	private let selectedIndex: Int?
 	private var cellPositions: Binding<[Value: CGRect]>
 	private var cellPositionsChanged: Binding<Int64>
 	private var config: FMSegmentControlConfig
@@ -189,12 +215,16 @@ private struct ValuePickerOption<Content: View, Value: Hashable>: View {
 	init(
 		selectedValue: Binding<Value>,
 		value: CustomTagValueTraitKey<Value>.Value,
+		index: Int,
+		selectedIndex: Int?,
 		cellPositions: Binding<[Value: CGRect]>,
 		cellPositionsChanged: Binding<Int64>,
 		config: FMSegmentControlConfig,
 		@ViewBuilder _ content: () -> Content
 	) {
 		self.selectedValue = selectedValue
+		self.index = index
+		self.selectedIndex = selectedIndex
 		self.cellPositions = cellPositions
 		self.cellPositionsChanged = cellPositionsChanged
 		self.config = config
@@ -223,7 +253,7 @@ private struct ValuePickerOption<Content: View, Value: Hashable>: View {
 				.contentShape(Rectangle())
 			}
 		)
-		.buttonStyle(config.buttonStyle(isSelected, isEnabled, colorScheme))
+		.buttonStyle(config.buttonStyle(isSelected, isEnabled, colorScheme, index, selectedIndex))
 		.contentShape(Rectangle())
 		.overlay{
 			GeometryReader { geo in
