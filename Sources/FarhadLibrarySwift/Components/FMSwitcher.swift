@@ -262,6 +262,8 @@ private struct FMSwitcherPreview: View {
 				Text("Value: \(isOn ? "On" : "Off")")
 			}
 
+			Divider()
+			
 			FMSwitcherPreview2()
 			
 			
@@ -278,20 +280,18 @@ private struct FMSwitcherPreview2: View {
 		FMSwitcherItem(id: 3, title: "Option 3")
 	]
 	var body: some View {
-		GroupBox{
-			Button {
-				items = [
-					FMSwitcherItem(id: 10, title: "Option 10"),
-					FMSwitcherItem(id: 11, title: "Option 11"),
-					FMSwitcherItem(id: 12, title: "Option 12"),
-					FMSwitcherItem(id: 13, title: "Option 13")
-				]
-			} label: {
-				Text("Change")
-			}
-			
-			FMSwitcher(selectedItem: $selectedItem, items: items)
+		Button {
+			items = [
+				FMSwitcherItem(id: 10, title: "Option 10"),
+				FMSwitcherItem(id: 11, title: "Option 11"),
+				FMSwitcherItem(id: 12, title: "Option 12"),
+				FMSwitcherItem(id: 13, title: "Option 13")
+			]
+		} label: {
+			Text("Change")
 		}
+		
+		FMSwitcher(selectedItem: $selectedItem, items: items)
 	}
 }
 
