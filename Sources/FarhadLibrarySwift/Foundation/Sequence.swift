@@ -28,3 +28,15 @@ public extension Sequence where Iterator.Element: Hashable {
 		return filter { seen.insert($0).inserted }
 	}
 }
+
+public extension Array where Element: Numeric & Comparable {
+	func closest(to target: Element) -> Element? {
+		func distance(from value: Element) -> Element {
+			value >= target ? value - target : target - value
+		}
+		
+		return self.min(by: {
+			distance(from: $0) < distance(from: $1)
+		})
+	}
+}
