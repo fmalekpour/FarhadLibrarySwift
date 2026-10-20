@@ -112,12 +112,25 @@ public struct FMSwitcher<Selection: Hashable>: View {
 
 		})
 		.onChange(of: selectedItem, initial: true, { oldValue, newValue in
-			if let newItem = items.first(where: { $0.id == newValue })
-			{
-				moveToItem(newItem, animated: oldValue != newValue)
-			}
+			self.updateSelection(newValue: newValue, animated: oldValue != newValue)
+		})
+		.onChange(of: items, initial: true, { oldValue, newValue in
+			self.updateSelection(newValue: selectedItem, animated: false)
 		})
 		.clipped()
+	}
+	
+	private func updateSelection(newValue: Selection, animated: Bool)
+	{
+		if let newItem = items.first(where: { $0.id == newValue })
+		{
+			moveToItem(newItem, animated: animated)
+		}
+		else if let item = items.first
+		{
+			selectedItem = item.id
+			moveToItem(item, animated: animated)
+		}
 	}
 	
 	private func leftClicked()
@@ -192,6 +205,7 @@ public extension FMSwitcher where Selection == Bool {
 @available(iOS 17.0, *)
 private struct FMSwitcherPreview: View {
 	@State var selectedItem: Int = 2
+	@State var selectedItemAlt: Int = 1
 	@State var isOn: Bool = true
 	var body: some View {
 		
@@ -248,10 +262,38 @@ private struct FMSwitcherPreview: View {
 				Text("Value: \(isOn ? "On" : "Off")")
 			}
 
+			FMSwitcherPreview2()
+			
+			
 		}
 	}
 }
 
+@available(iOS 17.0, *)
+private struct FMSwitcherPreview2: View {
+	@State var selectedItem: Int = 8
+	@State var items: [FMSwitcherItem<Int>] = [
+		FMSwitcherItem(id: 1, title: "Option 1"),
+		FMSwitcherItem(id: 2, title: "Option 2"),
+		FMSwitcherItem(id: 3, title: "Option 3")
+	]
+	var body: some View {
+		GroupBox{
+			Button {
+				items = [
+					FMSwitcherItem(id: 10, title: "Option 10"),
+					FMSwitcherItem(id: 11, title: "Option 11"),
+					FMSwitcherItem(id: 12, title: "Option 12"),
+					FMSwitcherItem(id: 13, title: "Option 13")
+				]
+			} label: {
+				Text("Change")
+			}
+			
+			FMSwitcher(selectedItem: $selectedItem, items: items)
+		}
+	}
+}
 
 #Preview {
 	if #available(iOS 17.0, *) {
