@@ -42,23 +42,40 @@ private struct FMReportSafeAreaInsets: ViewModifier {
 	}
 }
 
-@available(tvOS 26.0, *)
-@available(watchOS 26.0, *)
-@available(iOS 26.0, *)
 private struct FMReportContainerCornerInsets: ViewModifier {
-	var mReporter: (_ insets: RectangleCornerInsets) -> Void = {_ in}
+	var mReporter: (_ insets: FMRectangleCornerInsets) -> Void = {_ in}
 	var mInitial: Bool
 	func body(content: Content) -> some View {
-		content
-			.overlay {
-				GeometryReader { geo in
-					Color.clear
-						.onChange(of: geo.containerCornerInsets, initial: mInitial) { oldValue, newValue in
-							mReporter(newValue)
-						}
+		if #available(iOS 26.0, watchOS 26.0, tvOS 26.0, *)  {
+			content
+				.overlay {
+					GeometryReader { geo in
+						Color.clear
+							.onChange(of: geo.containerCornerInsets, initial: mInitial) { oldValue, newValue in
+								mReporter(FMRectangleCornerInsets(topLeading: newValue.topLeading,
+																  topTrailing: newValue.topTrailing,
+																  bottomLeading: newValue.bottomLeading,
+																  bottomTrailing: newValue.bottomTrailing))
+							}
+					}
 				}
-			}
+		}
+		else if mInitial
+		{
+			content
+				.onAppear {
+					mReporter(.zero)
+				}
+		}
 	}
+}
+public struct FMRectangleCornerInsets
+{
+	var topLeading: CGSize
+	var topTrailing: CGSize
+	var bottomLeading: CGSize
+	var bottomTrailing: CGSize
+	static var zero = FMRectangleCornerInsets(topLeading: .zero, topTrailing: .zero, bottomLeading: .zero, bottomTrailing: .zero)
 }
 
 
@@ -73,10 +90,7 @@ public extension View {
 		modifier(FMReportSafeAreaInsets(mReporter: reporter, mInitial: initial))
 	}
 	
-	@available(tvOS 26.0, *)
-	@available(watchOS 26.0, *)
-	@available(iOS 26.0, *)
-	func fmReportContainerCornerInsets(initial: Bool = true, _ reporter: @escaping (_ insets: RectangleCornerInsets) -> Void) -> some View {
+	func fmReportContainerCornerInsets(initial: Bool = true, _ reporter: @escaping (_ insets: FMRectangleCornerInsets) -> Void) -> some View {
 		modifier(FMReportContainerCornerInsets(mReporter: reporter, mInitial: initial))
 	}
 	
