@@ -42,6 +42,25 @@ private struct FMReportSafeAreaInsets: ViewModifier {
 	}
 }
 
+@available(tvOS 26.0, *)
+@available(watchOS 26.0, *)
+@available(iOS 26.0, *)
+private struct FMReportContainerCornerInsets: ViewModifier {
+	var mReporter: (_ insets: RectangleCornerInsets) -> Void = {_ in}
+	var mInitial: Bool
+	func body(content: Content) -> some View {
+		content
+			.overlay {
+				GeometryReader { geo in
+					Color.clear
+						.onChange(of: geo.containerCornerInsets, initial: mInitial) { oldValue, newValue in
+							mReporter(newValue)
+						}
+				}
+			}
+	}
+}
+
 
 public extension View {
 	@available(iOS 17.0, *)
@@ -53,6 +72,13 @@ public extension View {
 	func fmReportSafeAreaInsets(initial: Bool = true, _ reporter: @escaping (_ insets: EdgeInsets) -> Void) -> some View {
 		modifier(FMReportSafeAreaInsets(mReporter: reporter, mInitial: initial))
 	}
-
+	
+	@available(tvOS 26.0, *)
+	@available(watchOS 26.0, *)
+	@available(iOS 26.0, *)
+	func fmReportContainerCornerInsets(initial: Bool = true, _ reporter: @escaping (_ insets: RectangleCornerInsets) -> Void) -> some View {
+		modifier(FMReportContainerCornerInsets(mReporter: reporter, mInitial: initial))
+	}
+	
 }
 
