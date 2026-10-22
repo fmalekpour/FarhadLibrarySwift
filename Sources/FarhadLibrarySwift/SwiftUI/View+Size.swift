@@ -71,11 +71,11 @@ private struct FMReportContainerCornerInsets: ViewModifier {
 }
 public struct FMRectangleCornerInsets
 {
-	var topLeading: CGSize
-	var topTrailing: CGSize
-	var bottomLeading: CGSize
-	var bottomTrailing: CGSize
-	static var zero = FMRectangleCornerInsets(topLeading: .zero, topTrailing: .zero, bottomLeading: .zero, bottomTrailing: .zero)
+	public var topLeading: CGSize
+	public var topTrailing: CGSize
+	public var bottomLeading: CGSize
+	public var bottomTrailing: CGSize
+	static public var zero = FMRectangleCornerInsets(topLeading: .zero, topTrailing: .zero, bottomLeading: .zero, bottomTrailing: .zero)
 }
 
 
