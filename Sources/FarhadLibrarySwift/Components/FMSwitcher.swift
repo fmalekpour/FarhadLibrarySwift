@@ -61,10 +61,7 @@ public struct FMSwitcher<Selection: Hashable>: View {
 			.offset(x: mOffset)
 		})
 		.fmReportSize(initial: true, { size in
-			if size.width > mSize.width
-			{
-				mSize = size
-			}
+			mSize = size
 		})
 		.overlay(content: {
 			HStack {
@@ -115,6 +112,9 @@ public struct FMSwitcher<Selection: Hashable>: View {
 			self.updateSelection(newValue: newValue, animated: oldValue != newValue)
 		})
 		.onChange(of: items, initial: true, { oldValue, newValue in
+			self.updateSelection(newValue: selectedItem, animated: false)
+		})
+		.onChange(of: mSize, initial: true, { oldValue, newValue in
 			self.updateSelection(newValue: selectedItem, animated: false)
 		})
 		.clipped()
@@ -207,66 +207,83 @@ private struct FMSwitcherPreview: View {
 	@State var selectedItem: Int = 2
 	@State var selectedItemAlt: Int = 1
 	@State var isOn: Bool = true
+	@State var widthTest: CGFloat = 200
+	
+	init() {
+		print("----------------------------------------")
+	}
+	
 	var body: some View {
-		
-		VStack{
-			FMSwitcher(selectedItem: $selectedItem, items: [
-				FMSwitcherItem(id: 1, title: "Item 1"),
-				FMSwitcherItem(id: 2, title: "Another Item 2"),
-				FMSwitcherItem(id: 3, title: "Item 385")
-			])
-
-			FMSwitcher(selectedItem: $selectedItem, items: [
-				FMSwitcherItem(id: 1, title: "Item 1"),
-				FMSwitcherItem(id: 2, title: "Another Item 2"),
-				FMSwitcherItem(id: 3, title: "Item 385")
-			])
-			.font(.footnote)
-			
-			FMSwitcher(selectedItem: $selectedItem, items: [
-				FMSwitcherItem(id: 1, title: "Item 1"),
-				FMSwitcherItem(id: 2, title: "Another Item 2"),
-				FMSwitcherItem(id: 3, title: "Item 385")
-			])
-			.tint(.green)
-			.frame(width: 100)
-
-			FMSwitcher(selectedItem: $selectedItem, items: [
-				FMSwitcherItem(id: 1, title: "Item 1"),
-				FMSwitcherItem(id: 2, title: "Another Item 2"),
-				FMSwitcherItem(id: 3, title: "Item 385")
-			])
-			.frame(maxWidth: 200)
-			.foregroundStyle(.white)
-			.tint(.yellow)
-			.background {
-				RoundedRectangle(cornerRadius: 12)
-					.fill(Color.brown)
+		NavigationStack
+		{
+			VStack{
+				
+				FMSwitcher(selectedItem: $selectedItem, items: [
+					FMSwitcherItem(id: 1, title: "Item 1"),
+					FMSwitcherItem(id: 2, title: "Another Item 2"),
+					FMSwitcherItem(id: 3, title: "Item 385")
+				])
+				
+				FMSwitcher(selectedItem: $selectedItemAlt, items: [
+					FMSwitcherItem(id: 1, title: "Item 1"),
+					FMSwitcherItem(id: 2, title: "Another Item 2"),
+					FMSwitcherItem(id: 3, title: "Item 385")
+				])
+				.font(.footnote)
+				
+				FMSwitcher(selectedItem: $selectedItem, items: [
+					FMSwitcherItem(id: 1, title: "Item 1"),
+					FMSwitcherItem(id: 2, title: "Another Item 2"),
+					FMSwitcherItem(id: 3, title: "Item 385")
+				])
+				.tint(.green)
+				.frame(width: 100)
+				
+				Divider()
+				FMSwitcher(selectedItem: $selectedItem, items: [
+					FMSwitcherItem(id: 1, title: "Item 1"),
+					FMSwitcherItem(id: 2, title: "Another Item 2"),
+					FMSwitcherItem(id: 3, title: "Item 385")
+				])
+				.frame(maxWidth: widthTest)
+				.foregroundStyle(.white)
+				.tint(.yellow)
+				.background {
+					RoundedRectangle(cornerRadius: 12)
+						.fill(Color.brown)
+				}
+				HStack{
+					Button("Small", action: {widthTest = 100})
+					Button("Medium", action: {widthTest = 200})
+					Button("Large", action: {widthTest = 300})
+				}
+				Divider()
+				
+				FMSwitcher(selectedItem: $selectedItem, items: [
+					FMSwitcherItem(id: 1, title: "Item 1"),
+					FMSwitcherItem(id: 2, title: "Another Item 2"),
+					FMSwitcherItem(id: 3, title: "Item 385")
+				])
+				.foregroundStyle(.white)
+				.tint(.yellow)
+				.background {
+					RoundedRectangle(cornerRadius: 6)
+						.fill(Color.brown)
+				}
+				.padding(.horizontal)
+				
+				HStack{
+					FMSwitcher.BinarySwitcher(isOn: $isOn)
+					Text("Value: \(isOn ? "On" : "Off")")
+				}
+				
+				Divider()
+				
+				FMSwitcherPreview2()
+				
+				
+				
 			}
-			
-			FMSwitcher(selectedItem: $selectedItem, items: [
-				FMSwitcherItem(id: 1, title: "Item 1"),
-				FMSwitcherItem(id: 2, title: "Another Item 2"),
-				FMSwitcherItem(id: 3, title: "Item 385")
-			])
-			.foregroundStyle(.white)
-			.tint(.yellow)
-			.background {
-				RoundedRectangle(cornerRadius: 6)
-					.fill(Color.brown)
-			}
-			.padding(.horizontal)
-			
-			HStack{
-				FMSwitcher.BinarySwitcher(isOn: $isOn)
-				Text("Value: \(isOn ? "On" : "Off")")
-			}
-
-			Divider()
-			
-			FMSwitcherPreview2()
-			
-			
 		}
 	}
 }
@@ -277,7 +294,7 @@ private struct FMSwitcherPreview2: View {
 	@State var items: [FMSwitcherItem<Int>] = [
 		FMSwitcherItem(id: 1, title: "Option 1"),
 		FMSwitcherItem(id: 2, title: "Option 2"),
-		FMSwitcherItem(id: 3, title: "Option 3")
+		FMSwitcherItem(id: 3, title: "Option 3 a bit bigger")
 	]
 	var body: some View {
 		Button {
