@@ -71,6 +71,15 @@ public extension T4
 	
 #endif
 
+	static var IS_IPAD: Bool {
+#if os(iOS)
+		UIDevice.current.userInterfaceIdiom == .pad
+#else
+		false
+#endif
+	}
+
+	
 	/*
 	#define L4A_SCALE_FACTOR				FMScreenScale()
 	#define L4A_SCALE_FACTOR_PHYSICAL		FMScreenPhysicalScale()
