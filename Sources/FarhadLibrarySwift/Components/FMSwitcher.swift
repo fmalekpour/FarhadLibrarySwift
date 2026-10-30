@@ -16,29 +16,40 @@ public struct FMSwitcher<Selection: Hashable>: View {
 	}
 	
 	public func setLeftImage(_ image: Image) -> Self {
-		let copy = self
+		var copy = self
 		copy.mImageLeft = image
 		return copy
 	}
 	
 	public func setRightImage(_ image: Image) -> Self {
-		let copy = self
+		var copy = self
 		copy.mImageRight = image
 		return copy
 	}
 	
 	
+	/// Controls automatic replacement of an unavailable selection with the first item.
+	/// Defaults to true. Explicit user actions remain available when false.
+	public func setAutomaticSelectionEnabled(_ enabled: Bool) -> Self {
+		var copy = self
+		copy.mAutomaticSelectionEnabled = enabled
+		return copy
+	}
+	
+	private var mAutomaticSelectionEnabled = true
+	@Environment(\.isEnabled) private var isEnabled
+	
 	@Binding private var selectedItem: Selection
 	private var items: [FMSwitcherItem<Selection>]
-
-	@State private var mImageLeft: Image = Image(systemName: "chevron.left")
-	@State private var mImageRight: Image = Image(systemName: "chevron.right")
+	
+	private var mImageLeft: Image = Image(systemName: "chevron.left")
+	private var mImageRight: Image = Image(systemName: "chevron.right")
 	@State private var mSize: CGSize = CGSize(width: 1, height: 1)
 	@State private var mOffset: CGFloat = 0
 	
 	public var body: some View {
 		ZStack{
-			ForEach(items, id: \.self) { item in
+			ForEach(items, id: \.id) { item in
 				Text(item.title)
 					.lineLimit(1)
 					.opacity(0.0)
@@ -49,7 +60,7 @@ public struct FMSwitcher<Selection: Hashable>: View {
 		.padding(.horizontal, 20)
 		.overlay(alignment: .leading, content: {
 			HStack(spacing: 0, content: {
-				ForEach(items, id: \.self) { item in
+				ForEach(items, id: \.id) { item in
 					Text(item.title)
 						.lineLimit(1)
 						.minimumScaleFactor(0.8)
@@ -59,6 +70,8 @@ public struct FMSwitcher<Selection: Hashable>: View {
 				}
 			})
 			.offset(x: mOffset)
+			// Do not display a different item as selected when automatic correction is off.
+			.opacity(items.contains(where: { $0.id == selectedItem }) ? 1 : 0)
 		})
 		.fmReportSize(initial: true, { size in
 			mSize = size
@@ -77,10 +90,10 @@ public struct FMSwitcher<Selection: Hashable>: View {
 					}
 					.padding(.leading, 5)
 					.frame(maxHeight: .infinity)
-					.opacity(selectedItem == items.first?.id ? 0.5 : 1.0)
-					.grayscale(selectedItem == items.first?.id ? 1.0 : 0.0)
+					.opacity((items.isEmpty || selectedItem == items.first?.id) ? 0.5 : 1.0)
+					.grayscale((items.isEmpty || selectedItem == items.first?.id) ? 1.0 : 0.0)
 				}
-				.disabled(selectedItem == items.first?.id)
+				.disabled((items.isEmpty || selectedItem == items.first?.id))
 				
 				
 				
@@ -97,16 +110,16 @@ public struct FMSwitcher<Selection: Hashable>: View {
 					}
 					.padding(.trailing, 5)
 					.frame(maxHeight: .infinity)
-					.opacity(selectedItem == items.last?.id ? 0.5 : 1.0)
-					.grayscale(selectedItem == items.last?.id ? 1.0 : 0.0)
+					.opacity((items.isEmpty || selectedItem == items.last?.id) ? 0.5 : 1.0)
+					.grayscale((items.isEmpty || selectedItem == items.last?.id) ? 1.0 : 0.0)
 				}
-				.disabled(selectedItem == items.last?.id)
+				.disabled((items.isEmpty || selectedItem == items.last?.id))
 				
 			}
 			.buttonStyle(.borderless)
 			.buttonRepeatBehavior(.enabled)
 			
-
+			
 		})
 		.onChange(of: selectedItem, initial: true, { oldValue, newValue in
 			self.updateSelection(newValue: newValue, animated: oldValue != newValue)
@@ -117,7 +130,24 @@ public struct FMSwitcher<Selection: Hashable>: View {
 		.onChange(of: mSize, initial: true, { oldValue, newValue in
 			self.updateSelection(newValue: selectedItem, animated: false)
 		})
+		.onChange(of: mAutomaticSelectionEnabled) { _, _ in
+			updateSelection(newValue: selectedItem, animated: false)
+		}
 		.clipped()
+		.accessibilityElement(children: .ignore)
+		.accessibilityLabel(Text("Selection"))
+		.accessibilityValue(Text(items.first(where: { $0.id == selectedItem })?.title ?? ""))
+		.accessibilityAdjustableAction { direction in
+			guard isEnabled, !items.isEmpty else { return }
+			switch direction {
+				case .increment:
+					rightClicked()
+				case .decrement:
+					leftClicked()
+				@unknown default:
+					break
+			}
+		}
 	}
 	
 	private func updateSelection(newValue: Selection, animated: Bool)
@@ -126,7 +156,7 @@ public struct FMSwitcher<Selection: Hashable>: View {
 		{
 			moveToItem(newItem, animated: animated)
 		}
-		else if let item = items.first
+		else if mAutomaticSelectionEnabled, let item = items.first
 		{
 			selectedItem = item.id
 			moveToItem(item, animated: animated)
@@ -135,6 +165,14 @@ public struct FMSwitcher<Selection: Hashable>: View {
 	
 	private func leftClicked()
 	{
+		guard isEnabled else { return }
+		// An explicit action may select the first item even when automatic correction is off.
+		if !items.contains(where: { $0.id == selectedItem }) {
+			if let firstItem = items.first {
+				selectedItem = firstItem.id
+			}
+			return
+		}
 		items.first(where: { $0.id == selectedItem }).map { currentItem in
 			if let currentIndex = items.firstIndex(of: currentItem), currentIndex > 0
 			{
@@ -146,6 +184,14 @@ public struct FMSwitcher<Selection: Hashable>: View {
 	
 	private func rightClicked()
 	{
+		guard isEnabled else { return }
+		// An explicit action may select the first item even when automatic correction is off.
+		if !items.contains(where: { $0.id == selectedItem }) {
+			if let firstItem = items.first {
+				selectedItem = firstItem.id
+			}
+			return
+		}
 		items.first(where: { $0.id == selectedItem }).map { currentItem in
 			if let currentIndex = items.firstIndex(of: currentItem), currentIndex < items.count - 1
 			{
