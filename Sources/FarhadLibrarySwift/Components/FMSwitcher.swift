@@ -36,6 +36,26 @@ public struct FMSwitcher<Selection: Hashable>: View {
 		return copy
 	}
 	
+	public func withConfig(_ conf: (_ config: Configuration) -> Configuration) -> Self
+	{
+		var copy = self
+		copy.mConfig = conf(mConfig)
+		return copy
+	}
+
+	
+	public final class Configuration{
+		var buttonOpacityWhenDisabled: CGFloat = 0.4
+		var buttonPaddingFromEdge: CGFloat = 5.0
+		var buttonImageScale: Image.Scale = .small
+		var buttonScaleEffect: CGFloat = 0.85
+		var textPaddingHorizontal: CGFloat = 20
+		var textPaddingVertical: CGFloat = 4
+		var textMinimumScaleFactor: CGFloat = 0.8
+		var textLineLimit: Int = 1
+	}
+	
+	
 	private var mAutomaticSelectionEnabled = true
 	@Environment(\.isEnabled) private var isEnabled
 	
@@ -44,6 +64,7 @@ public struct FMSwitcher<Selection: Hashable>: View {
 	
 	private var mImageLeft: Image = Image(systemName: "chevron.left")
 	private var mImageRight: Image = Image(systemName: "chevron.right")
+	private var mConfig: Configuration = Configuration()
 	@State private var mSize: CGSize = CGSize(width: 1, height: 1)
 	@State private var mOffset: CGFloat = 0
 	
@@ -51,20 +72,20 @@ public struct FMSwitcher<Selection: Hashable>: View {
 		ZStack{
 			ForEach(items, id: \.id) { item in
 				Text(item.title)
-					.lineLimit(1)
+					.lineLimit(mConfig.textLineLimit)
 					.opacity(0.0)
 			}
 		}
 		.frame(maxWidth: .infinity)
-		.padding(.vertical, 4)
-		.padding(.horizontal, 20)
+		.padding(.vertical, mConfig.textPaddingVertical)
+		.padding(.horizontal, mConfig.textPaddingHorizontal)
 		.overlay(alignment: .leading, content: {
 			HStack(spacing: 0, content: {
 				ForEach(items, id: \.id) { item in
 					Text(item.title)
-						.lineLimit(1)
-						.minimumScaleFactor(0.8)
-						.padding(.horizontal, 20)
+						.lineLimit(mConfig.textLineLimit)
+						.minimumScaleFactor(mConfig.textMinimumScaleFactor)
+						.padding(.horizontal, mConfig.textPaddingHorizontal)
 						.frame(width: mSize.width, alignment: .center)
 						.clipped()
 				}
@@ -83,14 +104,14 @@ public struct FMSwitcher<Selection: Hashable>: View {
 				} label: {
 					HStack{
 						mImageLeft
-							.imageScale(.small)
-							.scaleEffect(0.85)
+							.imageScale(mConfig.buttonImageScale)
+							.scaleEffect(mConfig.buttonScaleEffect)
 							.foregroundStyle(.tint)
 						Spacer()
 					}
-					.padding(.leading, 5)
+					.padding(.leading, mConfig.buttonPaddingFromEdge)
 					.frame(maxHeight: .infinity)
-					.opacity((items.isEmpty || selectedItem == items.first?.id) ? 0.5 : 1.0)
+					.opacity((items.isEmpty || selectedItem == items.first?.id) ? mConfig.buttonOpacityWhenDisabled : 1.0)
 					.grayscale((items.isEmpty || selectedItem == items.first?.id) ? 1.0 : 0.0)
 				}
 				.disabled((items.isEmpty || selectedItem == items.first?.id))
@@ -104,13 +125,13 @@ public struct FMSwitcher<Selection: Hashable>: View {
 					HStack{
 						Spacer()
 						mImageRight
-							.imageScale(.small)
-							.scaleEffect(0.85)
+							.imageScale(mConfig.buttonImageScale)
+							.scaleEffect(mConfig.buttonScaleEffect)
 							.foregroundStyle(.tint)
 					}
-					.padding(.trailing, 5)
+					.padding(.trailing, mConfig.buttonPaddingFromEdge)
 					.frame(maxHeight: .infinity)
-					.opacity((items.isEmpty || selectedItem == items.last?.id) ? 0.5 : 1.0)
+					.opacity((items.isEmpty || selectedItem == items.last?.id) ? mConfig.buttonOpacityWhenDisabled : 1.0)
 					.grayscale((items.isEmpty || selectedItem == items.last?.id) ? 1.0 : 0.0)
 				}
 				.disabled((items.isEmpty || selectedItem == items.last?.id))
@@ -256,7 +277,7 @@ private struct FMSwitcherPreview: View {
 	@State var widthTest: CGFloat = 200
 	
 	init() {
-		print("----------------------------------------")
+		print("Preview Init")
 	}
 	
 	var body: some View {
