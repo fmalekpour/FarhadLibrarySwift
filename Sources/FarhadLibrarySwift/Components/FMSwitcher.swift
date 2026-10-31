@@ -45,14 +45,14 @@ public struct FMSwitcher<Selection: Hashable>: View {
 
 	
 	public final class Configuration{
-		var buttonOpacityWhenDisabled: CGFloat = 0.4
-		var buttonPaddingFromEdge: CGFloat = 5.0
-		var buttonImageScale: Image.Scale = .small
-		var buttonScaleEffect: CGFloat = 0.85
-		var textPaddingHorizontal: CGFloat = 20
-		var textPaddingVertical: CGFloat = 4
-		var textMinimumScaleFactor: CGFloat = 0.8
-		var textLineLimit: Int = 1
+		public var buttonOpacityWhenDisabled: CGFloat = 0.4
+		public var buttonPaddingFromEdge: CGFloat = 5.0
+		public var buttonImageScale: Image.Scale = .small
+		public var buttonScaleEffect: CGFloat = 0.85
+		public var textPaddingHorizontal: CGFloat = 20
+		public var textPaddingVertical: CGFloat = 4
+		public var textMinimumScaleFactor: CGFloat = 0.8
+		public var textLineLimit: Int = 1
 	}
 	
 	
