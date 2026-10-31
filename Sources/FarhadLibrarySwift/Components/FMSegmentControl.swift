@@ -48,6 +48,9 @@ public struct FMSegmentControl<SelectionValue: Hashable, Content: View>: View {
 					.frame(width: se.width, height: se.height)
 			}
 		})
+		.overlay(content: {
+			config.componentOverlay()
+		})
 		.onChange(of: selection.wrappedValue, initial: true, { oldValue, newValue in
 			if let p = cellPositions[newValue]
 			{
@@ -96,6 +99,10 @@ public struct FMSegmentControlConfig
 	public var background: () -> AnyViewModifierApplier = {
 		AnyViewModifierApplier(SegmentDefaultModifier())
 	}
+
+	public var componentOverlay: () -> AnyView = {
+		AnyView(SegmentComponentOverlay())
+	}
 }
 
 @available(iOS 17.0, *)
@@ -129,6 +136,13 @@ private struct SegmentDefaultModifier: ViewModifier {
 			.padding(2)
 			.background(colorScheme == .dark ? Color.white.opacity(0.2) : Color.black.opacity(0.2))
 			.clipShape(RoundedRectangle(cornerRadius: 8))
+	}
+}
+
+private struct SegmentComponentOverlay: View {
+	var body: some View{
+		Color.clear
+			.allowsHitTesting(false)
 	}
 }
 
