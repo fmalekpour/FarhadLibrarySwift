@@ -30,7 +30,7 @@ public struct FMSegmentControl<SelectionValue: Hashable, Content: View>: View {
 	}
 	
 	public var body: some View {
-		HStackEqualWidth(spacing: 5){
+		HStackEqualWidth(spacing: config.componentSpacing){
 			_VariadicView.Tree(ValuePickerOptions(selectedValue: selection,
 												  cellPositions: $cellPositions,
 												  cellPositionChanged: $cellPositionsChanged,
@@ -38,7 +38,7 @@ public struct FMSegmentControl<SelectionValue: Hashable, Content: View>: View {
 				content
 			}
 		}
-		.opacity(isEnabled ? 1.0 : 0.4)
+		.opacity(isEnabled ? 1.0 : config.disableOpacity)
 		.coordinateSpace(name: "FMSegmentControl")
 		.background(alignment: .topLeading, content: {
 			if let se = selectedCellPosition
@@ -48,13 +48,11 @@ public struct FMSegmentControl<SelectionValue: Hashable, Content: View>: View {
 					.frame(width: se.width, height: se.height)
 			}
 		})
-		.overlay(content: {
-			config.componentOverlay()
-		})
 		.onChange(of: selection.wrappedValue, initial: true, { oldValue, newValue in
 			if let p = cellPositions[newValue]
 			{
-				withAnimation(.bouncy(duration: 0.2)/*  .easeOut(duration: 0.2)*/){
+				
+				withAnimation(config.changeAnimation){
 					selectedCellPosition = p
 				}
 			}
@@ -82,8 +80,12 @@ public struct FMSegmentControl<SelectionValue: Hashable, Content: View>: View {
 @available(tvOS 17.0, *)
 public struct FMSegmentControlConfig
 {
-	public var backgroundCornerRadius: CGFloat = 8
-	public var selectedBackgroundCornerRadius: CGFloat = 6
+	//public var backgroundCornerRadius: CGFloat = 8
+	//public var selectedBackgroundCornerRadius: CGFloat = 6
+	public var componentSpacing: CGFloat = 5
+	public var changeAnimation: Animation = .bouncy(duration: 0.2)
+	public var disableOpacity: CGFloat = 0.4
+	
 	public var selectedBackground: () -> AnyView = {
 		AnyView(SegmentDefaultSelectedBackground())
 	}
@@ -100,9 +102,6 @@ public struct FMSegmentControlConfig
 		AnyViewModifierApplier(SegmentDefaultModifier())
 	}
 
-	public var componentOverlay: () -> AnyView = {
-		AnyView(SegmentComponentOverlay())
-	}
 }
 
 @available(iOS 17.0, *)
@@ -139,12 +138,6 @@ private struct SegmentDefaultModifier: ViewModifier {
 	}
 }
 
-private struct SegmentComponentOverlay: View {
-	var body: some View{
-		Color.clear
-			.allowsHitTesting(false)
-	}
-}
 
 private struct SegmentDefaultSelectedBackground: View{
 	@Environment(\.colorScheme) var colorScheme
