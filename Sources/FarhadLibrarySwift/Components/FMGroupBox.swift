@@ -156,20 +156,23 @@ public struct FMGroupBox<TITLE, CONTENTS>: View where TITLE: View, CONTENTS: Vie
 
 @available(iOS 17.0, *)
 public extension FMGroupBox where TITLE == Text {
-	init(_ title: String, @ViewBuilder _ contents: @escaping () -> CONTENTS) {
+	init(_ title: String? = nil, @ViewBuilder _ contents: @escaping () -> CONTENTS) {
 		self.mContents = contents
-		self.mTitle = {
-			Text(title)
-				.font(.subheadline)
-				.foregroundColor(.primary)
+		if let title
+		{
+			self.mTitle = {
+				Text(title)
+					.font(.subheadline)
+					.foregroundColor(.primary)
+			}
 		}
-	}
-	init(@ViewBuilder _ contents: @escaping () -> CONTENTS) {
-		self.mContents = contents
-		self.mTitle = {
-			Text("")
+		else
+		{
+			self.mTitle = {
+				Text("")
+			}
+			self.mHasTitle = false
 		}
-		self.mHasTitle = false
 	}
 }
 
