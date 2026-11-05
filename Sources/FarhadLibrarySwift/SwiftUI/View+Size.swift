@@ -78,6 +78,47 @@ public struct FMRectangleCornerInsets
 	static public var zero = FMRectangleCornerInsets(topLeading: .zero, topTrailing: .zero, bottomLeading: .zero, bottomTrailing: .zero)
 }
 
+private struct FMReportConcentricCornerRadii: ViewModifier {
+	var mReporter: (_ value: FMConcentricCornerRadii) -> Void = {_ in}
+	var mInitial: Bool
+	func body(content: Content) -> some View {
+		if #available(iOS 27.0, watchOS 27.0, tvOS 27.0, *)  {
+			content
+				.overlay {
+					GeometryReader { geo in
+						Color.clear
+							.onChange(of: geo.concentricCornerRadii, initial: mInitial) { oldValue, newValue in
+								guard let newValue else {
+									mReporter(.zero)
+									return
+								}
+								mReporter(FMConcentricCornerRadii(topLeading: newValue.topLeading,
+																  topTrailing: newValue.topTrailing,
+																  bottomLeading: newValue.bottomLeading,
+																  bottomTrailing: newValue.bottomTrailing))
+							}
+					}
+				}
+		}
+		else if mInitial
+		{
+			content
+				.onAppear {
+					mReporter(.zero)
+				}
+		}
+	}
+}
+public struct FMConcentricCornerRadii
+{
+	public var topLeading: CGFloat
+	public var topTrailing: CGFloat
+	public var bottomLeading: CGFloat
+	public var bottomTrailing: CGFloat
+	static public var zero = FMConcentricCornerRadii(topLeading: .zero, topTrailing: .zero, bottomLeading: .zero, bottomTrailing: .zero)
+}
+
+
 
 public extension View {
 	@available(iOS 17.0, *)
@@ -93,6 +134,11 @@ public extension View {
 	func fmReportContainerCornerInsets(initial: Bool = true, _ reporter: @escaping (_ insets: FMRectangleCornerInsets) -> Void) -> some View {
 		modifier(FMReportContainerCornerInsets(mReporter: reporter, mInitial: initial))
 	}
+	
+	func fmReportConcentricCornerRadii(initial: Bool = true, _ reporter: @escaping (_ value: FMConcentricCornerRadii) -> Void) -> some View {
+		modifier(FMReportConcentricCornerRadii(mReporter: reporter, mInitial: initial))
+	}
+	
 	
 }
 
